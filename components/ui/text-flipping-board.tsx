@@ -4,10 +4,14 @@ import React, { useEffect, useRef, useState, useMemo } from "react";
 import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 
-const FLAP_CHARS = " ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$()-+&=;:'\"%,./?°";
+const FLAP_CHARS = " ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$()-+&=;:'\"%,./?°|";
 
-const BOARD_ROWS = 6;
-const BOARD_COLS = 22;
+// Characters used for the *intermediate* scramble only — clean A–Z/0–9 so no
+// odd symbols or foreign-looking glyphs flash while a tile is settling.
+const SCRAMBLE_POOL = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+const BOARD_ROWS = 2;
+const BOARD_COLS = 16;
 
 const BASE_COL_DELAY = 30;
 const BASE_ROW_DELAY = 20;
@@ -25,19 +29,49 @@ type AccentColor = {
   text: string;
 };
 
+// Curated "heist" palette — coherent crimson / gold / white instead of a
+// noisy rainbow. Each entry uses a subtle vertical gradient for real depth.
 const ACCENT_COLORS: AccentColor[] = [
-  { top: "bg-red-600", bottom: "bg-red-700", text: "text-white" },
-  { top: "bg-orange-500", bottom: "bg-orange-600", text: "text-white" },
-  { top: "bg-yellow-400", bottom: "bg-yellow-500", text: "text-neutral-900" },
-  { top: "bg-green-600", bottom: "bg-green-700", text: "text-white" },
-  { top: "bg-blue-600", bottom: "bg-blue-700", text: "text-white" },
-  { top: "bg-violet-600", bottom: "bg-violet-700", text: "text-white" },
-  { top: "bg-white", bottom: "bg-neutral-100", text: "text-neutral-900" },
+  {
+    top: "bg-gradient-to-b from-red-500 to-red-600",
+    bottom: "bg-gradient-to-b from-red-600 to-red-800",
+    text: "text-white",
+  },
+  {
+    top: "bg-gradient-to-b from-red-700 to-red-800",
+    bottom: "bg-gradient-to-b from-red-800 to-red-950",
+    text: "text-white",
+  },
+  {
+    top: "bg-gradient-to-b from-orange-400 to-orange-500",
+    bottom: "bg-gradient-to-b from-orange-500 to-orange-700",
+    text: "text-white",
+  },
+  {
+    top: "bg-gradient-to-b from-amber-300 to-amber-400",
+    bottom: "bg-gradient-to-b from-amber-400 to-amber-600",
+    text: "text-neutral-900",
+  },
+  {
+    top: "bg-gradient-to-b from-white to-neutral-200",
+    bottom: "bg-gradient-to-b from-neutral-200 to-neutral-400",
+    text: "text-neutral-900",
+  },
 ];
+
+// Probability that a mid-scramble character flashes an accent color.
+// 0 = every tile stays a single, consistent color while typing (no rainbow).
+const ACCENT_FLICKER = 0;
+
+// Default "resting" flap surfaces — brushed graphite with a lit top edge.
+const DEFAULT_TOP = "bg-gradient-to-b from-neutral-700 to-neutral-900";
+const DEFAULT_BOTTOM = "bg-gradient-to-b from-neutral-900 to-black";
+const DEFAULT_FLAP_TOP = "bg-gradient-to-b from-neutral-700 to-neutral-900";
 
 const CELL_TEXT_STYLE: React.CSSProperties = {
   fontSize: "clamp(6px, 2vw, 22px)",
   lineHeight: 1,
+  fontFamily: "var(--font-flap), ui-monospace, monospace",
 };
 
 const FlapCell = React.memo(function FlapCell({
@@ -85,11 +119,11 @@ const FlapCell = React.memo(function FlapCell({
       const isLast = i === scrambleCount;
       const ch = isLast
         ? normalized
-        : FLAP_CHARS[1 + Math.floor(Math.random() * (FLAP_CHARS.length - 1))];
+        : SCRAMBLE_POOL[Math.floor(Math.random() * SCRAMBLE_POOL.length)];
 
       const newAccent = isLast
         ? null
-        : Math.random() < 0.2
+        : Math.random() < ACCENT_FLICKER
           ? ACCENT_COLORS[Math.floor(Math.random() * ACCENT_COLORS.length)]
           : null;
 
@@ -122,11 +156,11 @@ const FlapCell = React.memo(function FlapCell({
 
   const textCx =
     "absolute inset-x-0 flex select-none items-center justify-center font-mono font-bold tracking-wide";
-  const topBg = accent?.top ?? "bg-neutral-900";
-  const bottomBg = accent?.bottom ?? "bg-neutral-900";
+  const topBg = accent?.top ?? DEFAULT_TOP;
+  const bottomBg = accent?.bottom ?? DEFAULT_BOTTOM;
   const textColor = accent?.text ?? "text-white";
 
-  const flapTopBg = prevAccent?.top ?? "bg-neutral-800";
+  const flapTopBg = prevAccent?.top ?? DEFAULT_FLAP_TOP;
   const flapTextColor = prevAccent?.text ?? "text-white";
 
   const bottomDelay = flipDuration * 0.5;
@@ -152,6 +186,7 @@ const FlapCell = React.memo(function FlapCell({
           >
             {show}
           </div>
+          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom,rgba(255,255,255,0.14),transparent_65%)]" />
         </div>
 
         <div
@@ -336,6 +371,8 @@ export interface TextFlippingBoardProps {
   text?: string;
   className?: string;
   duration?: number;
+  /** Swoop the board in from a tilted 3D camera angle and rest with depth. */
+  cinematic?: boolean;
 }
 
 export function TextFlippingBoard({
@@ -343,6 +380,7 @@ export function TextFlippingBoard({
   text,
   className,
   duration = BASE_TOTAL_S,
+  cinematic = true,
 }: TextFlippingBoardProps) {
   const scale = duration / BASE_TOTAL_S;
   const colDelay = BASE_COL_DELAY * scale;
@@ -390,15 +428,36 @@ export function TextFlippingBoard({
     return grid;
   }, [rows, text]);
 
-  return (
+  const panel = (
     <div
       className={cn(
-        "relative mx-auto w-full max-w-3xl rounded-xl bg-neutral-950 p-3 shadow-2xl border border-red-500/20 md:rounded-2xl md:p-4",
+        "relative mx-auto w-full max-w-3xl rounded-xl p-3 md:rounded-2xl md:p-4",
+        // machined brushed-metal housing
+        "bg-gradient-to-b from-neutral-800 via-neutral-900 to-neutral-950",
+        "ring-1 ring-white/10 border border-white/5",
+        "shadow-[0_2px_0_0_rgba(255,255,255,0.06)_inset,0_-2px_24px_0_rgba(0,0,0,0.6)_inset,0_45px_120px_-30px_rgba(220,38,38,0.4),0_20px_60px_-20px_rgba(0,0,0,0.8)]",
         className,
       )}
     >
+      {/* corner screws */}
+      {[
+        "left-2 top-2",
+        "right-2 top-2",
+        "left-2 bottom-2",
+        "right-2 bottom-2",
+      ].map((pos) => (
+        <div
+          key={pos}
+          className={cn(
+            "pointer-events-none absolute z-30 h-1.5 w-1.5 rounded-full md:h-2 md:w-2",
+            "bg-[radial-gradient(circle_at_35%_30%,#a3a3a3,#404040_60%,#171717)] shadow-[0_1px_1px_rgba(0,0,0,0.8)]",
+            pos,
+          )}
+        />
+      ))}
+
       <div
-        className="grid gap-px md:gap-[3px]"
+        className="relative grid gap-px md:gap-[3px]"
         style={{ gridTemplateColumns: `repeat(${BOARD_COLS}, 1fr)` }}
       >
         {board.map((row, r) =>
@@ -417,6 +476,28 @@ export function TextFlippingBoard({
           ),
         )}
       </div>
+
+      {/* glass gloss + vignette over the whole board */}
+      <div className="pointer-events-none absolute inset-0 rounded-xl bg-[linear-gradient(to_bottom,rgba(255,255,255,0.06),transparent_18%,transparent_82%,rgba(0,0,0,0.35))] md:rounded-2xl" />
+      <div className="pointer-events-none absolute inset-0 rounded-xl bg-[radial-gradient(120%_80%_at_50%_-10%,rgba(255,255,255,0.08),transparent_55%)] md:rounded-2xl" />
+    </div>
+  );
+
+  if (!cinematic) return panel;
+
+  return (
+    <div
+      className="w-full"
+      style={{ perspective: "1600px", perspectiveOrigin: "50% 30%" }}
+    >
+      <motion.div
+        style={{ transformStyle: "preserve-3d", transformOrigin: "50% 100%" }}
+        initial={{ rotateX: 26, rotateY: -14, scale: 0.9, opacity: 0, y: 40 }}
+        animate={{ rotateX: 7, rotateY: -2.5, scale: 1, opacity: 1, y: 0 }}
+        transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
+      >
+        {panel}
+      </motion.div>
     </div>
   );
 }

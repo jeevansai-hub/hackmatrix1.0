@@ -1,9 +1,15 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import FirebaseProvider from "@/components/providers/firebase-provider";
 
 const inter = Inter({ subsets: ["latin"] });
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500", "700", "800"],
+  variable: "--font-flap",
+});
 
 export const metadata: Metadata = {
   title: "HackMatrix 1.0 — 2-Day Hackathon 2026 | VIIT Visakhapatnam",
@@ -35,7 +41,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark scroll-smooth">
-      <body className={`${inter.className} bg-[#030303] text-white antialiased`}>
+      <body className={`${inter.className} ${jetbrainsMono.variable} bg-[#030303] text-white antialiased`}>
         <FirebaseProvider>
           {children}
         </FirebaseProvider>
