@@ -4,12 +4,12 @@ import { getAnalytics, isSupported } from "firebase/analytics";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyAQiwzd5BfxBepQ6bLMY7C8i2zCTtL5Uq8",
-  authDomain: "matrixhack-b499f.firebaseapp.com",
-  projectId: "matrixhack-b499f",
-  storageBucket: "matrixhack-b499f.firebasestorage.app",
-  messagingSenderId: "840169251232",
-  appId: "1:840169251232:web:103013dd35ee98690c04c5"
+  apiKey: "AIzaSyC3dMflKEz0tO4oA3MfvzUci7qIR3rja5w",
+  authDomain: "hackmatrix-d251a.firebaseapp.com",
+  projectId: "hackmatrix-d251a",
+  storageBucket: "hackmatrix-d251a.firebasestorage.app",
+  messagingSenderId: "156076574825",
+  appId: "1:156076574825:web:0008a2eb5b458d08db3af8"
 };
 
 // Initialize Firebase (SSR-safe singleton pattern)

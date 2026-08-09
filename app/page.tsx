@@ -3,10 +3,11 @@ import React, { useState, useCallback } from "react";
 import Preloader from "@/components/sections/Preloader";
 import Navbar from "@/components/sections/Navbar";
 import Hero from "@/components/sections/Hero";
-import Motto from "@/components/sections/Motto";
-import Tracks from "@/components/sections/Tracks";
+import Experience from "@/components/sections/Experience";
+import Domains from "@/components/sections/Domains";
 import Prizes from "@/components/sections/Prizes";
-import Timeline from "@/components/sections/Timeline";
+import Schedule from "@/components/sections/Schedule";
+import Problems from "@/components/sections/Problems";
 import FAQ from "@/components/sections/FAQ";
 import Organizers from "@/components/sections/Organizers";
 import SocialFooter from "@/components/sections/SocialFooter";
@@ -50,10 +51,11 @@ export default function Home() {
                 <VideoBackground />
 
                 <div className="relative z-10 bg-transparent">
-                  <Motto />
-                  <Tracks />
+                  <Experience />
+                  <Domains />
                   <Prizes />
-                  <Timeline />
+                  <Schedule />
+                  <Problems />
                   <FAQ />
                   <Organizers />
                   <SocialFooter />

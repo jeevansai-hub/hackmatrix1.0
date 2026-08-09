@@ -7,9 +7,11 @@ import { cn } from "@/lib/utils";
 interface HeistVaultCountdownProps {
   targetDate: string;
   className?: string;
+  /** Tighter footprint (no orbit rings, smaller flaps) so it fits above the fold. */
+  compact?: boolean;
 }
 
-const DigitFlap = ({ value, label, isUrgentStrobe }: { value: number; label: string; isUrgentStrobe?: boolean }) => {
+const DigitFlap = ({ value, label, isUrgentStrobe, compact }: { value: number; label: string; isUrgentStrobe?: boolean; compact?: boolean }) => {
   const [prevVal, setPrevVal] = useState(value);
   const [isGlitching, setIsGlitching] = useState(false);
 
@@ -28,7 +30,10 @@ const DigitFlap = ({ value, label, isUrgentStrobe }: { value: number; label: str
     <div className="flex flex-col items-center">
       <div
         className={cn(
-          "relative h-16 w-14 sm:h-20 sm:w-16 rounded-xl bg-black border border-[#c41e3a]/40 shadow-xl overflow-hidden flex items-center justify-center perspective-dramatic",
+          "relative rounded-xl bg-black border border-[#c41e3a]/40 shadow-xl overflow-hidden flex items-center justify-center perspective-dramatic",
+          compact
+            ? "h-11 w-9 sm:h-14 sm:w-12"
+            : "h-16 w-14 sm:h-20 sm:w-16",
           isUrgentStrobe && "animate-pulse border-red-500 shadow-red-600/60"
         )}
       >
@@ -49,7 +54,8 @@ const DigitFlap = ({ value, label, isUrgentStrobe }: { value: number; label: str
             exit={{ rotateX: -90, opacity: 0 }}
             transition={{ duration: 0.4, ease: "easeInOut" }}
             className={cn(
-              "font-mono text-2xl sm:text-4xl font-black text-white tracking-widest drop-shadow-md select-none",
+              "font-mono font-black text-white tracking-widest drop-shadow-md select-none",
+              compact ? "text-lg sm:text-2xl" : "text-2xl sm:text-4xl",
               isGlitching && "text-red-400 translate-x-[1px]"
             )}
             style={{ transformStyle: "preserve-3d" }}
@@ -63,14 +69,19 @@ const DigitFlap = ({ value, label, isUrgentStrobe }: { value: number; label: str
         <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
       </div>
 
-      <span className="text-[10px] font-mono text-[#c41e3a] uppercase tracking-widest mt-2 font-bold">
+      <span
+        className={cn(
+          "font-mono text-[#c41e3a] uppercase tracking-widest font-bold",
+          compact ? "text-[8px] mt-1.5" : "text-[10px] mt-2",
+        )}
+      >
         {label}
       </span>
     </div>
   );
 };
 
-export function HeistVaultCountdown({ targetDate, className }: HeistVaultCountdownProps) {
+export function HeistVaultCountdown({ targetDate, className, compact = false }: HeistVaultCountdownProps) {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [totalSeconds, setTotalSeconds] = useState(10000);
 
@@ -100,18 +111,28 @@ export function HeistVaultCountdown({ targetDate, className }: HeistVaultCountdo
   const isUnder5Mins = totalSeconds < 300;
 
   return (
-    <div className={cn("relative flex items-center justify-center p-6", className)}>
-      {/* ── Rotating Vault Lock Ring Background ── */}
-      <motion.div
-        animate={{ rotate: 360 }}
-        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-        className="absolute inset-0 m-auto h-48 w-48 sm:h-56 sm:w-56 rounded-full border border-dashed border-[#c41e3a]/20 pointer-events-none"
-      />
-      <motion.div
-        animate={{ rotate: -360 }}
-        transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-        className="absolute inset-0 m-auto h-56 w-56 sm:h-64 sm:w-64 rounded-full border border-[#c41e3a]/15 pointer-events-none"
-      />
+    <div
+      className={cn(
+        "relative flex items-center justify-center",
+        compact ? "p-0" : "p-6",
+        className,
+      )}
+    >
+      {/* ── Rotating Vault Lock Ring Background (full size only) ── */}
+      {!compact && (
+        <>
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+            className="absolute inset-0 m-auto h-48 w-48 sm:h-56 sm:w-56 rounded-full border border-dashed border-[#c41e3a]/20 pointer-events-none"
+          />
+          <motion.div
+            animate={{ rotate: -360 }}
+            transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+            className="absolute inset-0 m-auto h-56 w-56 sm:h-64 sm:w-64 rounded-full border border-[#c41e3a]/15 pointer-events-none"
+          />
+        </>
+      )}
 
       {/* ── Main Panel with Ambient Silent Alarm Red Pulse ── */}
       <motion.div
@@ -133,28 +154,38 @@ export function HeistVaultCountdown({ targetDate, className }: HeistVaultCountdo
           repeat: Infinity,
           ease: "easeInOut",
         }}
-        className="relative z-10 flex items-center gap-2 sm:gap-4 rounded-2xl bg-black/90 border border-[#c41e3a]/50 p-4 sm:p-6 backdrop-blur-xl"
+        className={cn(
+          "relative z-10 flex items-center rounded-2xl bg-black/90 border border-[#c41e3a]/50 backdrop-blur-xl",
+          compact ? "gap-1.5 sm:gap-2.5 p-2.5 sm:p-3.5" : "gap-2 sm:gap-4 p-4 sm:p-6",
+        )}
       >
-        {/* DAYS */}
-        <DigitFlap value={timeLeft.days} label="Days" />
-
-        {/* COLON */}
-        <span className="text-xl sm:text-2xl font-black text-[#c41e3a] animate-pulse -mt-4">:</span>
-
-        {/* HOURS */}
-        <DigitFlap value={timeLeft.hours} label="Hours" />
-
-        {/* COLON */}
-        <span className="text-xl sm:text-2xl font-black text-[#c41e3a] animate-pulse -mt-4">:</span>
-
-        {/* MINS */}
-        <DigitFlap value={timeLeft.minutes} label="Mins" />
-
-        {/* COLON */}
-        <span className="text-xl sm:text-2xl font-black text-[#c41e3a] animate-pulse -mt-4">:</span>
-
-        {/* SECS */}
-        <DigitFlap value={timeLeft.seconds} label="Secs" isUrgentStrobe={isUnder5Mins} />
+        {(
+          [
+            ["Days", timeLeft.days, false],
+            ["Hours", timeLeft.hours, false],
+            ["Mins", timeLeft.minutes, false],
+            ["Secs", timeLeft.seconds, isUnder5Mins],
+          ] as const
+        ).map(([label, value, strobe], i) => (
+          <React.Fragment key={label}>
+            {i > 0 && (
+              <span
+                className={cn(
+                  "font-black text-[#c41e3a] animate-pulse",
+                  compact ? "text-base sm:text-lg -mt-3" : "text-xl sm:text-2xl -mt-4",
+                )}
+              >
+                :
+              </span>
+            )}
+            <DigitFlap
+              value={value}
+              label={label}
+              isUrgentStrobe={strobe}
+              compact={compact}
+            />
+          </React.Fragment>
+        ))}
       </motion.div>
     </div>
   );

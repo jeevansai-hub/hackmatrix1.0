@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "motion/react";
 const faqs = [
   {
     q: "Who can participate in HackMatrix 1.0?",
-    a: "Any college student (UG/PG) can participate. Teams of 2–4 members are required. Cross-college teams are welcome!",
+    a: "HackMatrix 1.0 is open to students of VIIT and VIEW (UG/PG). Teams of 2–4 members are required, and cross-department team formation is accepted.",
   },
   {
     q: "What is the registration fee?",

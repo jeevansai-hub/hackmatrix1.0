@@ -1,114 +1,288 @@
 "use client";
-import React from "react";
-import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
-import { FloatingDock } from "@/components/ui/floating-dock";
+import React, { useEffect, useState, useCallback } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import {
+  Home,
+  Info,
+  Layers,
+  Trophy,
+  Clock,
+  HelpCircle,
+  Menu,
+  X,
+  ArrowUpRight,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
 
-const navLinks = [
-  {
-    title: "Home",
-    href: "#home",
-    icon: (
-      <svg className="h-full w-full text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 9.75L12 3l9 6.75V21H15v-6H9v6H3V9.75z" />
-      </svg>
-    ),
-  },
-  {
-    title: "About",
-    href: "#about",
-    icon: (
-      <svg className="h-full w-full text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20A10 10 0 0012 2z" />
-      </svg>
-    ),
-  },
-  {
-    title: "Tracks",
-    href: "#tracks",
-    icon: (
-      <svg className="h-full w-full text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-      </svg>
-    ),
-  },
-  {
-    title: "Prizes",
-    href: "#prizes",
-    icon: (
-      <svg className="h-full w-full text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 3h14M5 3a2 2 0 00-2 2v1a10 10 0 0014 0V5a2 2 0 00-2-2M5 3h14M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-      </svg>
-    ),
-  },
-  {
-    title: "Timeline",
-    href: "#timeline",
-    icon: (
-      <svg className="h-full w-full text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-    ),
-  },
-  {
-    title: "FAQ",
-    href: "#faq",
-    icon: (
-      <svg className="h-full w-full text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M12 21a9 9 0 100-18 9 9 0 000 18z" />
-      </svg>
-    ),
-  },
-  {
-    title: "Register",
-    href: "https://bit.ly/HackMatrix10",
-    icon: (
-      <svg className="h-full w-full text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-      </svg>
-    ),
-  },
+const NAV_LINKS = [
+  { title: "Home", href: "#home", id: "home", icon: Home },
+  { title: "About", href: "#about", id: "about", icon: Info },
+  { title: "Tracks", href: "#tracks", id: "tracks", icon: Layers },
+  { title: "Prizes", href: "#prizes", id: "prizes", icon: Trophy },
+  { title: "Timeline", href: "#timeline", id: "timeline", icon: Clock },
+  { title: "FAQ", href: "#faq", id: "faq", icon: HelpCircle },
 ];
 
+const REGISTER_URL =
+  "https://docs.google.com/forms/d/e/1FAIpQLSd5HanrWsfYyQty8iWnHXvGu7NeqM2EEjd4x8nwqq0TJcpCGw/viewform";
+
 export default function Navbar() {
+  const [scrolled, setScrolled] = useState(false);
+  const [active, setActive] = useState("home");
+  const [open, setOpen] = useState(false);
+
+  // Condense the bar on scroll + highlight the section under a probe line.
+  // Scroll-driven (rather than a thin-band IntersectionObserver) so the active
+  // link never goes stale between sections.
+  useEffect(() => {
+    const update = () => {
+      const y = window.scrollY;
+      setScrolled(y > 24);
+
+      // Probe line sits ~35% down the viewport.
+      const probe = window.innerHeight * 0.35;
+      let current = NAV_LINKS[0].id;
+
+      for (const link of NAV_LINKS) {
+        const el = document.getElementById(link.id);
+        if (!el) continue;
+        // Viewport-relative top — correct regardless of positioned ancestors.
+        const top = el.getBoundingClientRect().top;
+        // Last section whose top has passed the probe line wins.
+        if (top <= probe) current = link.id;
+      }
+
+      // Pin the final link once the page is scrolled to the bottom.
+      const atBottom =
+        window.innerHeight + y >= document.documentElement.scrollHeight - 2;
+      if (atBottom) current = NAV_LINKS[NAV_LINKS.length - 1].id;
+
+      setActive(current);
+    };
+
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => {
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, []);
+
+  // Lock body scroll while the mobile sheet is open.
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
+  const handleNavClick = useCallback((id: string) => {
+    setActive(id);
+    setOpen(false);
+  }, []);
+
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 backdrop-blur-md bg-black/50 border-b border-white/10">
-      {/* Logo */}
-      <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-full border border-red-500/40 bg-black p-1 shadow-lg shadow-red-500/30">
-          <img src="/hackmatrix-logo.svg" alt="HackMatrix Logo" className="h-full w-full object-contain" />
-        </div>
-        <div>
-          <p className="font-bold text-white text-sm leading-none tracking-wider">HACKMATRIX</p>
-          <p className="text-red-500 font-mono text-xs">1.0</p>
-        </div>
-      </div>
-
-      {/* Desktop FloatingDock nav */}
-      <div className="hidden md:block">
-        <FloatingDock
-          items={navLinks}
-          desktopClassName="bg-black/60 border border-white/10 backdrop-blur-xl dark:bg-black/60 h-12 gap-2"
-        />
-      </div>
-
-      {/* CTA Button — HoverBorderGradient */}
-      <a href="https://bit.ly/HackMatrix10" target="_blank" rel="noopener noreferrer">
-        <HoverBorderGradient
-          containerClassName="rounded-full"
-          as="div"
-          className="bg-black text-white flex items-center space-x-2 text-sm font-semibold px-5 py-2"
+    <>
+      <header className="fixed top-0 left-0 right-0 z-50 flex justify-center px-3 pt-3 sm:px-5 sm:pt-4">
+        <motion.nav
+          initial={{ y: -28, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+          className={cn(
+            "flex w-full max-w-6xl items-center justify-between gap-3 rounded-full border transition-all duration-300",
+            scrolled
+              ? "border-white/10 bg-black/70 px-3 py-2 shadow-[0_8px_32px_-12px_rgba(220,38,38,0.45)] backdrop-blur-xl sm:px-4"
+              : "border-white/5 bg-black/30 px-3 py-2.5 backdrop-blur-md sm:px-5 sm:py-3",
+          )}
         >
-          <svg className="h-4 w-4 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-          </svg>
-          <span>Register Now</span>
-        </HoverBorderGradient>
-      </a>
+          {/* ── Brand ── */}
+          <a href="#home" className="group flex shrink-0 items-center gap-2.5">
+            <span
+              className={cn(
+                "relative flex items-center justify-center rounded-full border border-red-500/40 bg-black p-1 shadow-lg shadow-red-600/30 transition-all duration-300",
+                scrolled ? "h-8 w-8" : "h-9 w-9",
+              )}
+            >
+              <img
+                src="/hackmatrix-logo.svg"
+                alt="HackMatrix"
+                className="h-full w-full object-contain"
+              />
+              <span className="absolute inset-0 rounded-full bg-red-600/25 blur-md transition-opacity duration-300 group-hover:opacity-100 opacity-0" />
+            </span>
+            <span className="flex flex-col leading-none">
+              <span className="text-[13px] font-black tracking-[0.16em] text-white sm:text-sm">
+                HACK<span className="text-red-500">MATRIX</span>
+              </span>
+              <span className="mt-0.5 font-mono text-[9px] tracking-[0.3em] text-white/40">
+                1.0 · VIIT
+              </span>
+            </span>
+          </a>
 
-      {/* Mobile menu icon */}
-      <div className="md:hidden">
-        <FloatingDock items={navLinks} mobileClassName="" />
-      </div>
-    </header>
+          {/* ── Desktop links ── */}
+          <ul className="hidden items-center gap-0.5 lg:flex">
+            {NAV_LINKS.map((link) => {
+              const isActive = active === link.id;
+              return (
+                <li key={link.id} className="relative">
+                  <a
+                    href={link.href}
+                    onClick={() => handleNavClick(link.id)}
+                    className={cn(
+                      "relative z-10 block rounded-full px-3.5 py-2 text-[13px] font-medium transition-colors duration-200",
+                      isActive
+                        ? "text-white"
+                        : "text-white/55 hover:text-white",
+                    )}
+                  >
+                    {link.title}
+                  </a>
+                  {isActive && (
+                    <motion.span
+                      layoutId="nav-pill"
+                      transition={{
+                        type: "spring",
+                        stiffness: 380,
+                        damping: 32,
+                      }}
+                      className="absolute inset-0 rounded-full border border-red-500/30 bg-red-500/10 shadow-[0_0_18px_-4px_rgba(220,38,38,0.8)_inset]"
+                    />
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+
+          {/* ── Actions ── */}
+          <div className="flex shrink-0 items-center gap-2">
+            {/* Register — compact on mobile, full label from sm up.
+                Sits before the menu button in DOM + visual order. */}
+            <a
+              href={REGISTER_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group relative inline-flex items-center gap-1 overflow-hidden rounded-full bg-red-600 px-3 py-1.5 text-[11px] font-bold text-white shadow-lg shadow-red-900/40 transition-all duration-300 hover:bg-red-500 hover:shadow-red-600/50 sm:gap-1.5 sm:px-4 sm:py-2 sm:text-[13px]"
+            >
+              <span className="relative z-10">Register</span>
+              <ArrowUpRight className="relative z-10 h-3 w-3 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 sm:h-3.5 sm:w-3.5" />
+              {/* sheen */}
+              <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
+            </a>
+
+            <button
+              onClick={() => setOpen((v) => !v)}
+              aria-label={open ? "Close menu" : "Open menu"}
+              aria-expanded={open}
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white transition-colors hover:border-red-500/40 hover:text-red-400 lg:hidden"
+            >
+              <AnimatePresence mode="wait" initial={false}>
+                {open ? (
+                  <motion.span
+                    key="x"
+                    initial={{ rotate: -90, opacity: 0 }}
+                    animate={{ rotate: 0, opacity: 1 }}
+                    exit={{ rotate: 90, opacity: 0 }}
+                    transition={{ duration: 0.18 }}
+                  >
+                    <X className="h-4.5 w-4.5" />
+                  </motion.span>
+                ) : (
+                  <motion.span
+                    key="menu"
+                    initial={{ rotate: 90, opacity: 0 }}
+                    animate={{ rotate: 0, opacity: 1 }}
+                    exit={{ rotate: -90, opacity: 0 }}
+                    transition={{ duration: 0.18 }}
+                  >
+                    <Menu className="h-4.5 w-4.5" />
+                  </motion.span>
+                )}
+              </AnimatePresence>
+            </button>
+          </div>
+        </motion.nav>
+      </header>
+
+      {/* ── Mobile sheet ── */}
+      {/* Direct children of AnimatePresence (no Fragment) so exits are tracked */}
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            key="backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            onClick={() => setOpen(false)}
+            className="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm lg:hidden"
+          />
+        )}
+        {open && (
+          <motion.div
+              key="sheet"
+              initial={{ opacity: 0, y: -14, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -14, scale: 0.97 }}
+              transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+              className="fixed inset-x-3 top-[4.75rem] z-50 overflow-hidden rounded-3xl border border-white/10 bg-black/90 p-2.5 shadow-[0_24px_60px_-20px_rgba(220,38,38,0.5)] backdrop-blur-2xl sm:inset-x-5 lg:hidden"
+            >
+              <ul className="flex flex-col">
+                {NAV_LINKS.map((link, i) => {
+                  const Icon = link.icon;
+                  const isActive = active === link.id;
+                  return (
+                    <motion.li
+                      key={link.id}
+                      initial={{ opacity: 0, x: -12 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.04 * i, duration: 0.25 }}
+                    >
+                      <a
+                        href={link.href}
+                        onClick={() => handleNavClick(link.id)}
+                        className={cn(
+                          "flex items-center gap-3 rounded-2xl px-3.5 py-3 text-sm font-medium transition-colors",
+                          isActive
+                            ? "bg-red-500/10 text-white"
+                            : "text-white/65 hover:bg-white/5 hover:text-white",
+                        )}
+                      >
+                        <span
+                          className={cn(
+                            "flex h-8 w-8 items-center justify-center rounded-xl border transition-colors",
+                            isActive
+                              ? "border-red-500/40 bg-red-500/15 text-red-400"
+                              : "border-white/10 bg-white/5 text-white/50",
+                          )}
+                        >
+                          <Icon className="h-4 w-4" />
+                        </span>
+                        {link.title}
+                        {isActive && (
+                          <span className="ml-auto h-1.5 w-1.5 rounded-full bg-red-500 shadow-[0_0_8px_rgba(220,38,38,0.9)]" />
+                        )}
+                      </a>
+                    </motion.li>
+                  );
+                })}
+              </ul>
+
+              <a
+                href={REGISTER_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setOpen(false)}
+                className="mt-2 flex items-center justify-center gap-2 rounded-2xl bg-red-600 px-4 py-3.5 text-sm font-bold text-white shadow-lg shadow-red-900/40 transition-colors hover:bg-red-500"
+              >
+                Register Now
+                <ArrowUpRight className="h-4 w-4" />
+              </a>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
+

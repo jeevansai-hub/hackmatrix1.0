@@ -1,262 +1,219 @@
 "use client";
 import React from "react";
 import { motion } from "motion/react";
-import { WebcamPixelGrid } from "@/components/ui/webcam-pixel-grid";
-import { LayoutTextFlip } from "@/components/ui/layout-text-flip";
-import { GlareCard } from "@/components/ui/glare-card";
-import { PinContainer } from "@/components/ui/3d-pin";
+import { PixelGrid } from "@/components/ui/pixel-grid";
 import { SquigglyText } from "@/components/ui/squiggly-text";
 import { HeistVaultCountdown } from "@/components/ui/heist-vault-countdown";
+
+/** Essential event facts — level 4 of the hierarchy. */
+const FACTS: { label: string; accent?: boolean }[] = [
+  { label: "13–14 AUGUST 2026" },
+  { label: "VIIT / DUVVADA" },
+  { label: "2–4 MEMBERS" },
+  { label: "₹400 / TEAM" },
+  { label: "₹10,000+ PRIZE POOL", accent: true },
+];
+
+const fade = (delay: number) => ({
+  initial: { opacity: 0, y: 12 },
+  animate: { opacity: 1, y: 0 },
+  transition: { delay, duration: 0.55, ease: [0.16, 1, 0.3, 1] as const },
+});
 
 export default function Hero() {
   return (
     <section
       id="home"
-      className="relative w-full overflow-hidden flex flex-col items-center justify-center bg-black"
+      className="relative flex w-full items-center justify-center overflow-hidden bg-black"
       style={{ minHeight: "100dvh" }}
     >
-      {/* ── background_animation_livecam.txt ──
-          WebcamPixelGrid: 100% visible interactive grid.
-          If webcam is denied or off, falls back to the Cloudfront video background automatically! */}
-      <div
-        className="absolute inset-0 z-0"
-        style={{ width: "100vw", height: "100dvh", left: 0, top: 0 }}
-      >
-        <WebcamPixelGrid
-          gridCols={36}
-          gridRows={22}
-          maxElevation={35}
-          motionSensitivity={0.25}
-          elevationSmoothing={0.15}
-          colorMode="webcam"
-          backgroundColor="#000000"
-          mirror={true}
-          gapRatio={0.08}
-          invertColors={false}
-          darken={0.1}
-          borderColor="#ffffff"
-          borderOpacity={0.15}
-          className="w-full h-full"
+      {/* ── Interactive 3D pixel-grid background ── */}
+      <div className="absolute inset-0 z-0">
+        <PixelGrid
+          cellSize={30}
+          maxElevation={14}
+          gapRatio={0.14}
+          intensityCap={0.8}
+          pointerRadius={7}
+          className="h-full w-full"
         />
       </div>
 
-      {/* Subtle vignette layer */}
+      {/* Vignette keeps the centre readable */}
       <div
-        className="absolute inset-0 z-[1] pointer-events-none"
+        className="pointer-events-none absolute inset-0 z-[1]"
         style={{
           background:
-            "radial-gradient(ellipse 100% 100% at 50% 50%, transparent 40%, rgba(0,0,0,0.7) 100%)",
+            "radial-gradient(ellipse 100% 100% at 50% 50%, transparent 40%, rgba(0,0,0,0.72) 100%)",
         }}
       />
 
-      {/* ── Hero Content ── */}
-      <div className="relative z-10 flex flex-col items-center justify-center text-center px-4 pt-[140px] md:pt-[180px] pb-[80px] max-w-6xl mx-auto w-full gap-[24px]">
+      {/* ── Frame 1: complete event overview ── */}
+      <div
+        className="relative z-10 mx-auto flex w-full max-w-5xl flex-col items-center px-5 text-center"
+        style={{
+          // Minimums are deliberately tight so short/landscape viewports
+          // still fit the whole overview in one frame.
+          paddingTop: "clamp(4.25rem, 12vh, 8rem)",
+          paddingBottom: "clamp(1rem, 4.5vh, 3rem)",
+          gap: "clamp(0.45rem, 1.85vh, 1.35rem)",
+        }}
+      >
+        {/* 1 ── IDENTITY ─────────────────────────────── */}
+        <motion.div {...fade(0.05)} className="flex flex-col items-center gap-1">
+          <p
+            className="font-mono uppercase text-white/60"
+            style={{
+              fontSize: "clamp(0.5rem, 1.45vw, 0.7rem)",
+              letterSpacing: "0.28em",
+            }}
+          >
+            Department of Artificial Intelligence &amp; Data Science
+          </p>
+          <p
+            className="font-mono uppercase text-white/35"
+            style={{
+              fontSize: "clamp(0.44rem, 1.2vw, 0.62rem)",
+              letterSpacing: "0.2em",
+            }}
+          >
+            in association with Matrix Club &amp; IEEE CIS SBC
+          </p>
+        </motion.div>
 
-        {/* Dali Cyber Emblem Logo */}
+        {/* 2 ── MAIN IDENTITY ────────────────────────── */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
+          initial={{ opacity: 0, scale: 0.94 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6 }}
-          className="h-28 w-28 sm:h-36 sm:w-36 rounded-full p-1 border-2 border-red-500/40 bg-black/80 shadow-2xl shadow-red-600/40 backdrop-blur-md"
+          transition={{ delay: 0.15, duration: 0.7, ease: "backOut" }}
+          className="flex flex-col items-center"
         >
-          <img
-            src="/hackmatrix-logo.svg"
-            alt="HackMatrix Emblem"
-            className="h-full w-full object-contain"
-          />
-        </motion.div>
-
-        {/* Department Badge */}
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
-          className="inline-flex items-center gap-2 rounded-full border border-red-500/20 bg-red-500/10 px-4 py-1.5 text-xs font-mono text-red-400 backdrop-blur-md shadow-xl"
-        >
-          <span className="h-2 w-2 rounded-full bg-red-500 animate-pulse" />
-          Dept. of AI &amp; Data Science · VIIT Visakhapatnam
-        </motion.div>
-
-        {/* Headline: HACKMATRIX 1.0 */}
-        <div className="flex flex-col items-center max-w-[800px]">
-          <motion.h1
-            initial={{ opacity: 0, scale: 0.92 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.35, duration: 0.7, ease: "backOut" }}
-            className="text-5xl sm:text-7xl md:text-[8.5rem] font-black tracking-tighter text-white leading-none drop-shadow-2xl"
-            style={{ textShadow: "0 0 80px rgba(220,38,38,0.5)" }}
+          <h1
+            className="font-black text-white"
+            style={{
+              fontSize: "clamp(2.6rem, min(14vw, 12.5vh), 8.5rem)",
+              lineHeight: 0.86,
+              letterSpacing: "-0.035em",
+              textShadow: "0 0 80px rgba(220,38,38,0.45)",
+            }}
           >
-            HACK<SquigglyText scale={[6, 10]} className="text-red-500">MATRIX</SquigglyText>
-          </motion.h1>
+            HACK
+            <SquigglyText scale={[6, 10]} className="text-red-500">
+              MATRIX
+            </SquigglyText>
+          </h1>
 
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.45, duration: 0.5 }}
-            className="mt-2 text-lg sm:text-2xl font-bold text-white/80"
+          {/* version marker */}
+          <div
+            className="flex items-center justify-center gap-3"
+            style={{ marginTop: "clamp(0.3rem, 1vh, 0.7rem)" }}
           >
-            <span className="font-mono text-red-400 text-xl sm:text-3xl">1.0</span>
-            &nbsp;— 2-Day Hackathon 2026
-          </motion.div>
-
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5, duration: 0.5 }}
-            className="mt-3 text-xs sm:text-sm font-normal text-white/70 max-w-[640px] text-center"
-          >
-            In association with Matrix Club &amp; IEEE CIS Student Branch · 13th &amp; 14th August 2026
-          </motion.p>
-        </div>
-
-        {/* ── Heist Vault Lock Animated Countdown Timer ── */}
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6, duration: 0.6 }}
-          className="my-2 w-full flex justify-center"
-        >
-          <HeistVaultCountdown targetDate="2026-08-13T09:00:00" />
-        </motion.div>
-
-        {/* LayoutTextFlip for Tracks */}
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7, duration: 0.6 }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-3 text-white"
-        >
-          <LayoutTextFlip
-            text="Explore "
-            words={["AI / ML", "Cloud Computing", "Cybersecurity", "Robotics"]}
-            duration={3000}
-          />
-        </motion.div>
-
-        {/* Event Facts with GlareCard and 3D Pin Venue */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8, duration: 0.6 }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 w-full max-w-5xl items-stretch"
-        >
-          {/* Card 1: DATES */}
-          <GlareCard className="p-5 flex flex-col justify-between text-left group">
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-2xl">📅</span>
-                <span className="text-[10px] font-mono tracking-widest text-red-400 bg-red-500/10 px-2 py-0.5 rounded-full border border-red-500/20">
-                  DATES
-                </span>
-              </div>
-              <h3 className="text-lg font-bold text-white group-hover:text-red-400 transition-colors">
-                13–14 Aug 2026
-              </h3>
-            </div>
-            <div className="pt-3 border-t border-white/10 opacity-70 group-hover:opacity-100 transition-opacity">
-              <p className="text-xs text-white/60">
-                2 Full Days of Non-Stop Innovation &amp; Hacking
-              </p>
-            </div>
-          </GlareCard>
-
-          {/* Card 2: TEAM SIZE */}
-          <GlareCard className="p-5 flex flex-col justify-between text-left group">
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-2xl">👥</span>
-                <span className="text-[10px] font-mono tracking-widest text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/20">
-                  TEAM SIZE
-                </span>
-              </div>
-              <h3 className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors">
-                2–4 Members
-              </h3>
-            </div>
-            <div className="pt-3 border-t border-white/10 opacity-70 group-hover:opacity-100 transition-opacity">
-              <p className="text-xs text-white/60">
-                Cross-College &amp; Interdisciplinary Teams Welcome
-              </p>
-            </div>
-          </GlareCard>
-
-          {/* Card 3: ENTRY FEE */}
-          <GlareCard className="p-5 flex flex-col justify-between text-left group">
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-2xl">💰</span>
-                <span className="text-[10px] font-mono tracking-widest text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
-                  ENTRY FEE
-                </span>
-              </div>
-              <h3 className="text-lg font-bold text-white group-hover:text-emerald-400 transition-colors">
-                ₹400 / Team
-              </h3>
-            </div>
-            <div className="pt-3 border-t border-white/10 opacity-70 group-hover:opacity-100 transition-opacity">
-              <p className="text-xs text-white/60">
-                Includes Food, Mentorship, Swag &amp; Certificates
-              </p>
-            </div>
-          </GlareCard>
-
-          {/* Card 4: VENUE */}
-          <div className="h-full min-h-[170px] flex items-center justify-center">
-            <PinContainer
-              title="VIIT Campus · Duvvada, Visakhapatnam"
-              href="https://maps.google.com/?q=Vignan's+Institute+of+Information+Technology+Duvvada"
-              containerClassName="w-full h-full"
-              className="w-full h-full"
+            <span className="h-px w-8 bg-gradient-to-r from-transparent to-red-500/60 sm:w-14" />
+            <span
+              className="font-mono font-black text-red-500"
+              style={{
+                fontSize: "clamp(0.95rem, 3.2vw, 1.6rem)",
+                letterSpacing: "0.16em",
+              }}
             >
-              <div className="flex flex-col justify-between p-5 w-64 sm:w-56 h-36 tracking-tight bg-slate-950/90 rounded-2xl">
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-2xl">📍</span>
-                    <span className="text-[10px] font-mono tracking-widest text-red-400 bg-red-500/10 px-2 py-0.5 rounded-full border border-red-500/20">
-                      VENUE
-                    </span>
-                  </div>
-                  <h3 className="font-bold text-base text-white">
-                    VIIT, Duvvada
-                  </h3>
-                </div>
-                <div className="pt-2 border-t border-white/10">
-                  <p className="text-xs text-red-400 font-mono flex items-center gap-1">
-                    <span>View on Map</span>
-                    <span>→</span>
-                  </p>
-                </div>
-              </div>
-            </PinContainer>
+              1.0
+            </span>
+            <span className="h-px w-8 bg-gradient-to-l from-transparent to-red-500/60 sm:w-14" />
           </div>
         </motion.div>
 
-        {/* CTA Buttons */}
+        {/* 3 ── EVENT POSITIONING ────────────────────── */}
+        <motion.div {...fade(0.3)} className="flex flex-col items-center gap-1.5">
+          <p
+            className="font-bold uppercase text-white"
+            style={{
+              fontSize: "clamp(0.78rem, 2.5vw, 1.35rem)",
+              letterSpacing: "0.2em",
+            }}
+          >
+            2-Day Hackathon 2026
+          </p>
+          <p
+            className="font-mono uppercase text-red-400"
+            style={{
+              fontSize: "clamp(0.55rem, 1.7vw, 0.85rem)",
+              letterSpacing: "0.3em",
+              textShadow: "0 0 22px rgba(220,38,38,0.45)",
+            }}
+          >
+            Build Today. Secure Tomorrow.
+          </p>
+        </motion.div>
+
+        {/* 4 ── ESSENTIAL EVENT FACTS ────────────────── */}
+        <motion.ul
+          {...fade(0.4)}
+          className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 sm:gap-x-4"
+        >
+          {FACTS.map((fact, i) => (
+            <React.Fragment key={fact.label}>
+              {i > 0 && (
+                <li aria-hidden className="h-3 w-px bg-white/15 max-sm:hidden" />
+              )}
+              <li
+                className={
+                  fact.accent
+                    ? "font-mono font-bold uppercase text-red-400"
+                    : "font-mono uppercase text-white/70"
+                }
+                style={{
+                  fontSize: "clamp(0.52rem, 1.55vw, 0.78rem)",
+                  letterSpacing: "0.14em",
+                }}
+              >
+                {fact.label}
+              </li>
+            </React.Fragment>
+          ))}
+        </motion.ul>
+
+        {/* 5 ── LIVE COUNTDOWN ───────────────────────── */}
+        <motion.div {...fade(0.5)}>
+          <HeistVaultCountdown targetDate="2026-08-13T09:00:00" compact />
+        </motion.div>
+
+        {/* 6 ── PRIMARY ACTIONS ──────────────────────── */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.95, duration: 0.6 }}
-          className="flex flex-col sm:flex-row items-center gap-4"
+          {...fade(0.6)}
+          className="flex w-full flex-col items-center gap-2.5 sm:w-auto sm:flex-row sm:gap-3"
+          style={{ marginTop: "clamp(0.15rem, 0.8vh, 0.6rem)" }}
         >
           <a
-            href="https://bit.ly/HackMatrix10"
+            href="https://docs.google.com/forms/d/e/1FAIpQLSd5HanrWsfYyQty8iWnHXvGu7NeqM2EEjd4x8nwqq0TJcpCGw/viewform"
             target="_blank"
             rel="noopener noreferrer"
-            className="group relative inline-flex h-14 items-center justify-center gap-2 rounded-full bg-red-600 px-8 text-base font-bold text-white shadow-lg shadow-red-900/40 transition-all hover:bg-red-500 hover:scale-105 hover:shadow-red-600/50"
+            className="group relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-full bg-red-600 px-7 font-bold uppercase text-white shadow-lg shadow-red-900/40 transition-all hover:bg-red-500 hover:shadow-red-600/50 sm:w-auto"
+            style={{
+              height: "clamp(2.6rem, 6vh, 3.25rem)",
+              fontSize: "clamp(0.65rem, 1.8vw, 0.85rem)",
+              letterSpacing: "0.14em",
+            }}
           >
-            Register Now — bit.ly/HackMatrix10
-            <svg
-              className="h-4 w-4 transition-transform group-hover:translate-x-1"
-              fill="none" viewBox="0 0 24 24" stroke="currentColor"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
+            <span className="relative z-10">Register Your Team</span>
+            <span className="relative z-10 transition-transform group-hover:translate-x-1">
+              →
+            </span>
+            <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
           </a>
+
           <a
-            href="#tracks"
-            className="inline-flex h-14 items-center justify-center gap-2 rounded-full border border-white/20 bg-white/5 px-8 text-base font-medium text-white backdrop-blur-sm transition-all hover:bg-white/10 hover:border-white/30"
+            href="#about"
+            className="group inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/20 bg-white/5 px-7 font-medium uppercase text-white backdrop-blur-sm transition-all hover:border-white/35 hover:bg-white/10 sm:w-auto"
+            style={{
+              height: "clamp(2.6rem, 6vh, 3.25rem)",
+              fontSize: "clamp(0.65rem, 1.8vw, 0.85rem)",
+              letterSpacing: "0.14em",
+            }}
           >
-            Explore Tracks
+            Explore the Hackathon
+            <span className="transition-transform group-hover:translate-y-0.5">
+              ↓
+            </span>
           </a>
         </motion.div>
       </div>

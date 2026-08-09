@@ -9,13 +9,13 @@ import { motion } from "motion/react";
 const socialLinks = [
   {
     name: "Register",
-    url: "https://bit.ly/HackMatrix10",
+    url: "https://docs.google.com/forms/d/e/1FAIpQLSd5HanrWsfYyQty8iWnHXvGu7NeqM2EEjd4x8nwqq0TJcpCGw/viewform",
     icon: (
       <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
       </svg>
     ),
-    label: "bit.ly/HackMatrix10",
+    label: "Register Now",
     color: "text-red-400 hover:text-red-300",
     border: "border-red-500/20 hover:border-red-500/40",
   },

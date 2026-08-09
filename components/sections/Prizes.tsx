@@ -3,6 +3,14 @@ import React, { useState } from "react";
 import { CardContainer, CardBody, CardItem } from "@/components/ui/3d-card";
 import { MoneyShower } from "@/components/ui/money-rain";
 import { motion } from "motion/react";
+import { Cpu, Cloud, ShieldCheck, Bot, Trophy } from "lucide-react";
+
+const TRACKS = [
+  { domain: "AI / ML", Icon: Cpu },
+  { domain: "Cloud Computing", Icon: Cloud },
+  { domain: "Cybersecurity", Icon: ShieldCheck },
+  { domain: "Robotics", Icon: Bot },
+];
 
 export default function Prizes() {
   const [moneyTrigger, setMoneyTrigger] = useState(0);
@@ -91,7 +99,13 @@ export default function Prizes() {
                 <span className="rounded-full border border-red-500/30 bg-red-500/10 px-3 py-1 text-xs font-mono font-semibold text-red-400">
                   HACKMATRIX 1.0
                 </span>
-                <span className="text-3xl">🏆</span>
+                <motion.span
+                  animate={{ rotate: [0, -8, 8, -8, 0], y: [0, -2, 0] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                  className="flex h-11 w-11 items-center justify-center rounded-xl border border-yellow-500/30 bg-yellow-500/10 text-yellow-300 shadow-lg shadow-yellow-500/10"
+                >
+                  <Trophy className="h-6 w-6" strokeWidth={1.75} />
+                </motion.span>
               </CardItem>
 
               <CardItem
@@ -119,21 +133,30 @@ export default function Prizes() {
 
               <CardItem
                 translateZ="80"
-                className="w-full mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3"
+                className="mt-8 grid w-full grid-cols-2 gap-2.5 sm:grid-cols-4 sm:gap-3"
               >
-                {[
-                  { domain: "AI / ML", icon: "🤖" },
-                  { domain: "Cloud Computing", icon: "☁️" },
-                  { domain: "Cybersecurity", icon: "🔐" },
-                  { domain: "Robotics", icon: "🦾" },
-                ].map((item) => (
-                  <div
+                {TRACKS.map((item, i) => (
+                  <motion.div
                     key={item.domain}
-                    className="rounded-xl border border-white/10 bg-white/5 p-3 text-center"
+                    whileHover={{ y: -4 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                    className="group flex flex-col items-center gap-2 rounded-xl border border-white/10 bg-white/5 p-3 text-center transition-colors hover:border-red-500/40 hover:bg-red-500/[0.06] sm:p-4"
                   >
-                    <div className="text-xl mb-1">{item.icon}</div>
-                    <div className="text-xs font-semibold text-white/80">{item.domain}</div>
-                  </div>
+                    <motion.span
+                      animate={{ y: [0, -3, 0] }}
+                      transition={{
+                        duration: 2.4 + i * 0.25,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                      }}
+                      className="flex h-9 w-9 items-center justify-center rounded-full border border-red-500/30 bg-red-500/10 text-red-400 transition-colors group-hover:text-red-300 sm:h-11 sm:w-11"
+                    >
+                      <item.Icon className="h-4 w-4 sm:h-5 sm:w-5" strokeWidth={1.75} />
+                    </motion.span>
+                    <span className="text-[11px] font-semibold leading-tight text-white/80 sm:text-xs">
+                      {item.domain}
+                    </span>
+                  </motion.div>
                 ))}
               </CardItem>
 
@@ -141,12 +164,12 @@ export default function Prizes() {
                 <CardItem
                   translateZ={30}
                   as="a"
-                  href="https://bit.ly/HackMatrix10"
+                  href="https://docs.google.com/forms/d/e/1FAIpQLSd5HanrWsfYyQty8iWnHXvGu7NeqM2EEjd4x8nwqq0TJcpCGw/viewform"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-xs font-mono text-red-400 hover:text-red-300 transition-colors flex items-center gap-1"
                 >
-                  bit.ly/HackMatrix10 →
+                  Register Now →
                 </CardItem>
                 <CardItem
                   translateZ={50}

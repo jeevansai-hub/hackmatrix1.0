@@ -4,11 +4,45 @@ import { motion } from "motion/react";
 import { CardContainer, CardBody, CardItem } from "@/components/ui/3d-card";
 import { MacbookScroll } from "@/components/ui/macbook-scroll";
 import { SquigglyText } from "@/components/ui/squiggly-text";
-import {
-  TextRevealCard,
-  TextRevealCardTitle,
-  TextRevealCardDescription,
-} from "@/components/ui/text-reveal-card";
+import { Phone } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+// Featured lead organizer, shown above the two faculty coordinators.
+// TODO: replace the placeholder name / phone / photo with the real details.
+const leadOrganizer = {
+  roleTag: "CONVENER · HACKMATRIX 1.0",
+  name: "To Be Announced",
+  designation: "Head, Department of AI & Data Science · VIIT",
+  phone: "", // add the phone (10 digits) to show a clickable dialer button
+  image: "/hackmatrix-logo.svg",
+};
+
+// Clickable phone → opens the device dialer (tel:), always visible.
+function ContactButton({
+  phone,
+  className,
+}: {
+  phone: string;
+  className?: string;
+}) {
+  const digits = phone.replace(/\D/g, "");
+  return (
+    <a
+      href={`tel:+91${digits}`}
+      onClick={(e) => e.stopPropagation()}
+      className={cn(
+        "group/phone inline-flex items-center gap-2 rounded-full border border-red-500/30 bg-red-500/10 px-3.5 py-1.5 font-mono text-xs font-semibold tracking-wide text-red-300 transition-colors hover:border-red-500/60 hover:bg-red-500/20 hover:text-white",
+        className,
+      )}
+    >
+      <Phone
+        className="h-3.5 w-3.5 transition-transform group-hover/phone:rotate-12"
+        strokeWidth={2}
+      />
+      +91 {phone}
+    </a>
+  );
+}
 
 const facultyCoordinators = [
   {
@@ -80,46 +114,95 @@ export default function Organizers() {
           </motion.h2>
         </div>
 
-        {/* ── Faculty Section with 3D Floating Perspective Cards + TextReveal ── */}
+        {/* ── Faculty Section — featured lead card + redesigned coordinator cards ── */}
         <div className="mb-20">
           <p className="text-center text-xs uppercase tracking-widest text-white/40 mb-8 font-mono">
             Faculty Coordinators
           </p>
+
+          {/* Featured lead organizer (top) */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="mx-auto mb-8 max-w-5xl"
+          >
+            <CardContainer className="w-full">
+              <CardBody className="w-full rounded-2xl border border-red-500/25 bg-gradient-to-br from-red-500/[0.09] via-black to-zinc-950 p-6 shadow-2xl transition-all duration-300 hover:border-red-500/50 sm:p-7">
+                <div className="flex flex-col items-center gap-5 text-center sm:flex-row sm:justify-between sm:text-left">
+                  <div className="flex flex-col items-center gap-5 sm:flex-row sm:text-left">
+                    <CardItem translateZ="60">
+                      <img
+                        src={leadOrganizer.image}
+                        alt={leadOrganizer.name}
+                        className="h-24 w-24 shrink-0 rounded-2xl border border-red-500/40 object-cover p-1 shadow-xl shadow-red-600/20"
+                      />
+                    </CardItem>
+                    <CardItem translateZ="40" className="min-w-0">
+                      <span className="inline-block rounded-full border border-red-500/40 bg-red-500/10 px-3 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.22em] text-red-400">
+                        {leadOrganizer.roleTag}
+                      </span>
+                      <h3 className="mt-3 text-xl font-black tracking-tight text-white sm:text-2xl">
+                        {leadOrganizer.name}
+                      </h3>
+                      <p className="mt-1 text-xs text-white/55 sm:text-sm">
+                        {leadOrganizer.designation}
+                      </p>
+                    </CardItem>
+                  </div>
+                  {leadOrganizer.phone && (
+                    <CardItem translateZ="50" className="shrink-0">
+                      <ContactButton phone={leadOrganizer.phone} />
+                    </CardItem>
+                  )}
+                </div>
+              </CardBody>
+            </CardContainer>
+          </motion.div>
+
+          {/* Two faculty coordinators */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
             {facultyCoordinators.map((f, i) => (
               <motion.div
                 key={f.name}
                 initial={{ opacity: 0, y: 25 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.15, duration: 0.5 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.12, duration: 0.5 }}
               >
                 <CardContainer className="w-full">
-                  <CardBody className="w-full bg-gradient-to-b from-zinc-900 via-black to-zinc-950 border border-white/10 hover:border-red-500/40 rounded-2xl p-6 transition-all duration-300">
-                    <CardItem translateZ="40" className="w-full">
-                      <TextRevealCard
-                        text={f.name}
-                        revealText={`📞 ${f.phone}`}
-                        className="w-full bg-transparent border-none p-0"
-                      >
-                        <TextRevealCardTitle className="text-lg font-bold text-red-400">
-                          Faculty Coordinator
-                        </TextRevealCardTitle>
-                        <TextRevealCardDescription className="text-white/70 text-xs mt-1 mb-4">
-                          {f.role}
-                        </TextRevealCardDescription>
-                      </TextRevealCard>
-                    </CardItem>
-
-                    <CardItem translateZ="60" className="w-full mt-4 pt-4 border-t border-white/10 flex items-center gap-4">
+                  <CardBody className="group/card flex h-full w-full flex-col rounded-2xl border border-white/10 bg-gradient-to-b from-zinc-900 via-black to-zinc-950 p-6 transition-all duration-300 hover:border-red-500/40 hover:shadow-2xl hover:shadow-red-600/10">
+                    <CardItem translateZ="50" className="flex w-full items-center gap-4">
                       <img
                         src={f.image}
                         alt={f.name}
-                        className="h-16 w-16 rounded-xl object-cover border border-red-500/30 shadow-lg"
+                        className="h-20 w-20 shrink-0 rounded-2xl border border-red-500/30 object-cover shadow-lg transition-transform duration-300 group-hover/card:scale-105"
                       />
-                      <div>
-                        <p className="text-sm font-bold text-white">{f.name}</p>
-                        <p className="text-xs text-red-400 font-mono">Hover to reveal contact →</p>
+                      <div className="min-w-0">
+                        <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-red-400">
+                          Faculty Coordinator
+                        </span>
+                        <h3 className="mt-1 text-lg font-bold tracking-tight text-white">
+                          {f.name}
+                        </h3>
                       </div>
+                    </CardItem>
+
+                    <CardItem translateZ="30" className="mt-4 w-full">
+                      <p className="text-xs leading-relaxed text-white/55">
+                        {f.role}
+                      </p>
+                    </CardItem>
+
+                    <CardItem
+                      translateZ="40"
+                      className="mt-5 flex w-full items-center justify-between border-t border-white/10 pt-4"
+                    >
+                      <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/35">
+                        Direct Contact
+                      </span>
+                      <ContactButton phone={f.phone} />
                     </CardItem>
                   </CardBody>
                 </CardContainer>
@@ -157,13 +240,8 @@ export default function Organizers() {
                         {s.name}
                       </h4>
                     </CardItem>
-                    <CardItem translateZ="20">
-                      <a
-                        href={`tel:${s.contact}`}
-                        className="text-xs text-red-400 font-mono hover:text-red-300 transition-colors bg-red-500/10 px-2.5 py-0.5 rounded-full border border-red-500/20 mt-1 inline-block"
-                      >
-                        📞 {s.contact}
-                      </a>
+                    <CardItem translateZ="20" className="mt-1">
+                      <ContactButton phone={s.contact} className="px-3 py-1 text-[11px]" />
                     </CardItem>
                   </CardBody>
                 </CardContainer>
@@ -181,28 +259,28 @@ export default function Organizers() {
               </span>
             }
           >
-            <div className="flex flex-col items-center justify-center h-full text-center px-4 py-2 space-y-3">
-              <span className="text-[10px] font-mono tracking-widest text-red-400 uppercase bg-red-500/10 px-3 py-1 rounded-full border border-red-500/30">
+            <div className="flex flex-col items-center justify-center h-full text-center px-4 py-2 space-y-3.5">
+              <span className="text-[10px] font-mono font-semibold tracking-[0.3em] text-red-400 uppercase bg-red-500/10 px-3.5 py-1 rounded-full border border-red-500/30">
                 Department of AI &amp; Data Science
               </span>
-              <h4 className="text-base sm:text-xl font-black text-white leading-tight">
+              <h4 className="text-lg sm:text-2xl font-black tracking-tight leading-[1.05] bg-gradient-to-b from-white to-white/65 bg-clip-text text-transparent">
                 Vignan&apos;s Institute of Information Technology
               </h4>
-              <p className="text-xs text-white/60">
+              <p className="text-[11px] font-mono tracking-[0.15em] text-white/45">
                 Autonomous · Visakhapatnam · Affiliated to JNTU-GV
               </p>
 
               <div className="flex flex-wrap justify-center gap-2 pt-2">
-                <span className="rounded-full border border-red-500/30 bg-red-500/10 px-3 py-1 text-[10px] font-semibold text-red-400">
+                <span className="rounded-full border border-red-500/30 bg-red-500/10 px-3 py-1 text-[10px] font-mono font-semibold uppercase tracking-[0.12em] text-red-300">
                   Matrix Club
                 </span>
-                <span className="rounded-full border border-blue-500/30 bg-blue-500/10 px-3 py-1 text-[10px] font-semibold text-blue-400">
+                <span className="rounded-full border border-blue-500/30 bg-blue-500/10 px-3 py-1 text-[10px] font-mono font-semibold uppercase tracking-[0.12em] text-blue-300">
                   IEEE CIS Student Branch
                 </span>
-                <span className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-[10px] font-semibold text-emerald-400">
+                <span className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-[10px] font-mono font-semibold uppercase tracking-[0.12em] text-emerald-300">
                   NAAC A+
                 </span>
-                <span className="rounded-full border border-yellow-500/30 bg-yellow-500/10 px-3 py-1 text-[10px] font-semibold text-yellow-400">
+                <span className="rounded-full border border-yellow-500/30 bg-yellow-500/10 px-3 py-1 text-[10px] font-mono font-semibold uppercase tracking-[0.12em] text-yellow-300">
                   NIRF 201-300
                 </span>
               </div>
