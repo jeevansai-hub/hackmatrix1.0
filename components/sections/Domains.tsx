@@ -92,7 +92,7 @@ const DOMAINS: Domain[] = [
   },
   {
     idx: "05",
-    nav: "OPEN TECHNOLOGY",
+    nav: "OPEN INNOVATION",
     title: "OPEN TECHNOLOGY",
     sub: "BEYOND THE OBVIOUS",
     desc: "Technology doesn't stop at a predefined category. Bring an idea that crosses disciplines and find the tools needed to make it work.",
@@ -194,7 +194,7 @@ export default function Domains() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2, duration: 0.6 }}
-          className="mt-10 flex gap-1 overflow-x-auto border-y border-white/10 py-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [mask-image:linear-gradient(to_right,transparent,#000_4%,#000_92%,transparent)] sm:[mask-image:none]"
+          className="mt-10 grid grid-cols-6 gap-x-1.5 gap-y-2 border-y border-white/10 py-3 sm:flex sm:gap-1 sm:gap-y-0 sm:overflow-x-auto sm:[scrollbar-width:none] sm:[&::-webkit-scrollbar]:hidden"
         >
           {DOMAINS.map((dom, i) => (
             <button
@@ -202,8 +202,11 @@ export default function Domains() {
               onClick={() => setActive(i)}
               onMouseEnter={() => setActive(i)}
               className={cn(
-                "relative shrink-0 px-3 py-1 font-mono text-[11px] tracking-[0.2em] transition-colors sm:px-4 sm:text-xs",
-                active === i ? "text-white" : "text-white/35 hover:text-white/70",
+                "relative flex w-full items-center justify-center whitespace-nowrap rounded-md border px-2 py-2 text-center font-mono text-[10px] leading-tight tracking-[0.14em] transition-colors sm:w-auto sm:shrink-0 sm:rounded-none sm:border-0 sm:bg-transparent sm:px-4 sm:py-1 sm:text-xs sm:tracking-[0.2em]",
+                i < 3 ? "col-span-2" : "col-span-3",
+                active === i
+                  ? "border-red-500/50 bg-red-500/10 text-white sm:border-0 sm:bg-transparent"
+                  : "border-white/10 bg-white/[0.03] text-white/40 hover:text-white/70 sm:bg-transparent",
               )}
             >
               {dom.nav}
@@ -211,7 +214,7 @@ export default function Domains() {
                 <motion.span
                   layoutId="domain-underline"
                   transition={{ type: "spring", stiffness: 400, damping: 34 }}
-                  className="absolute inset-x-2 -bottom-3 h-0.5 rounded-full bg-red-500 shadow-[0_0_10px_rgba(220,38,38,0.9)]"
+                  className="absolute inset-x-2 -bottom-3 hidden h-0.5 rounded-full bg-red-500 shadow-[0_0_10px_rgba(220,38,38,0.9)] sm:block"
                 />
               )}
             </button>
