@@ -1,0 +1,216 @@
+"use client";
+import React from "react";
+import { motion } from "motion/react";
+import { CardContainer, CardBody, CardItem } from "@/components/ui/3d-card";
+import { MacbookScroll } from "@/components/ui/macbook-scroll";
+import { SquigglyText } from "@/components/ui/squiggly-text";
+import {
+  TextRevealCard,
+  TextRevealCardTitle,
+  TextRevealCardDescription,
+} from "@/components/ui/text-reveal-card";
+
+const facultyCoordinators = [
+  {
+    name: "Dr. P. Visweswara Rao",
+    role: "Associate Professor, AI&DS · IEEE Senior Member · Advisor, IEEE CIS Student Branch",
+    phone: "7794977707",
+    image: "/organizers/pvr.png",
+  },
+  {
+    name: "Dr. J. Peter Praveen",
+    role: "Associate Professor · Deputy HoD, AI&DS",
+    phone: "9949865863",
+    image: "/organizers/praveen.png",
+  },
+];
+
+// Student coordinators with Money Heist Dali Mask icons
+const studentCoordinators = [
+  {
+    name: "S. Manohar",
+    contact: "9381716121",
+    avatar: "/hackmatrix-logo.svg",
+  },
+  {
+    name: "M. Sai Deepika",
+    contact: "7981954548",
+    avatar: "/hackmatrix-logo.svg",
+  },
+  {
+    name: "B. Chaitanya Surya Deva",
+    contact: "8143245575",
+    avatar: "/hackmatrix-logo.svg",
+  },
+  {
+    name: "R.D.V. Prasad",
+    contact: "7382612327",
+    avatar: "/hackmatrix-logo.svg",
+  },
+  {
+    name: "S. Rohit",
+    contact: "6300138007",
+    avatar: "/hackmatrix-logo.svg",
+  },
+];
+
+export default function Organizers() {
+  return (
+    <section id="organizers" className="relative py-24 px-4 bg-transparent overflow-hidden">
+      <div className="max-w-6xl mx-auto">
+        {/* Section Header */}
+        <div className="text-center mb-16">
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            className="text-xs uppercase tracking-[0.4em] text-red-500/60 mb-4 font-mono"
+          >
+            The Team
+          </motion.p>
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-4xl sm:text-6xl font-black text-white"
+          >
+            Meet the{" "}
+            <SquigglyText scale={[5, 8]} className="text-red-500">
+              Organizers
+            </SquigglyText>
+          </motion.h2>
+        </div>
+
+        {/* ── Faculty Section with 3D Floating Perspective Cards + TextReveal ── */}
+        <div className="mb-20">
+          <p className="text-center text-xs uppercase tracking-widest text-white/40 mb-8 font-mono">
+            Faculty Coordinators
+          </p>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            {facultyCoordinators.map((f, i) => (
+              <motion.div
+                key={f.name}
+                initial={{ opacity: 0, y: 25 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.15, duration: 0.5 }}
+              >
+                <CardContainer className="w-full">
+                  <CardBody className="w-full bg-gradient-to-b from-zinc-900 via-black to-zinc-950 border border-white/10 hover:border-red-500/40 rounded-2xl p-6 transition-all duration-300">
+                    <CardItem translateZ="40" className="w-full">
+                      <TextRevealCard
+                        text={f.name}
+                        revealText={`📞 ${f.phone}`}
+                        className="w-full bg-transparent border-none p-0"
+                      >
+                        <TextRevealCardTitle className="text-lg font-bold text-red-400">
+                          Faculty Coordinator
+                        </TextRevealCardTitle>
+                        <TextRevealCardDescription className="text-white/70 text-xs mt-1 mb-4">
+                          {f.role}
+                        </TextRevealCardDescription>
+                      </TextRevealCard>
+                    </CardItem>
+
+                    <CardItem translateZ="60" className="w-full mt-4 pt-4 border-t border-white/10 flex items-center gap-4">
+                      <img
+                        src={f.image}
+                        alt={f.name}
+                        className="h-16 w-16 rounded-xl object-cover border border-red-500/30 shadow-lg"
+                      />
+                      <div>
+                        <p className="text-sm font-bold text-white">{f.name}</p>
+                        <p className="text-xs text-red-400 font-mono">Hover to reveal contact →</p>
+                      </div>
+                    </CardItem>
+                  </CardBody>
+                </CardContainer>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
+        {/* ── Student Coordinators with Money Heist Dali Mask DPs + 3D Card Floating Effect ── */}
+        <div className="mb-24">
+          <p className="text-center text-xs uppercase tracking-widest text-white/40 mb-8 font-mono">
+            Student Coordinators
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+            {studentCoordinators.map((s, i) => (
+              <motion.div
+                key={s.name}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1, duration: 0.4 }}
+              >
+                <CardContainer className="w-full">
+                  <CardBody className="w-full bg-gradient-to-b from-zinc-900/90 via-black to-zinc-950 border border-white/10 hover:border-red-500/40 rounded-2xl p-5 text-center flex flex-col items-center">
+                    <CardItem translateZ="60">
+                      <div className="h-16 w-16 rounded-full overflow-hidden border-2 border-red-500/40 bg-black p-1 mb-3 shadow-lg shadow-red-500/30 flex items-center justify-center">
+                        <img
+                          src={s.avatar}
+                          alt={s.name}
+                          className="h-full w-full object-contain"
+                        />
+                      </div>
+                    </CardItem>
+                    <CardItem translateZ="40">
+                      <h4 className="text-sm font-bold text-white mb-1">
+                        {s.name}
+                      </h4>
+                    </CardItem>
+                    <CardItem translateZ="20">
+                      <a
+                        href={`tel:${s.contact}`}
+                        className="text-xs text-red-400 font-mono hover:text-red-300 transition-colors bg-red-500/10 px-2.5 py-0.5 rounded-full border border-red-500/20 mt-1 inline-block"
+                      >
+                        📞 {s.contact}
+                      </a>
+                    </CardItem>
+                  </CardBody>
+                </CardContainer>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
+        {/* ── Organized By Section with MacbookScroll ── */}
+        <div className="relative">
+          <MacbookScroll
+            title={
+              <span className="text-2xl sm:text-4xl font-extrabold text-white">
+                Organized <SquigglyText className="text-red-500">By</SquigglyText>
+              </span>
+            }
+          >
+            <div className="flex flex-col items-center justify-center h-full text-center px-4 py-2 space-y-3">
+              <span className="text-[10px] font-mono tracking-widest text-red-400 uppercase bg-red-500/10 px-3 py-1 rounded-full border border-red-500/30">
+                Department of AI &amp; Data Science
+              </span>
+              <h4 className="text-base sm:text-xl font-black text-white leading-tight">
+                Vignan&apos;s Institute of Information Technology
+              </h4>
+              <p className="text-xs text-white/60">
+                Autonomous · Visakhapatnam · Affiliated to JNTU-GV
+              </p>
+
+              <div className="flex flex-wrap justify-center gap-2 pt-2">
+                <span className="rounded-full border border-red-500/30 bg-red-500/10 px-3 py-1 text-[10px] font-semibold text-red-400">
+                  Matrix Club
+                </span>
+                <span className="rounded-full border border-blue-500/30 bg-blue-500/10 px-3 py-1 text-[10px] font-semibold text-blue-400">
+                  IEEE CIS Student Branch
+                </span>
+                <span className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-[10px] font-semibold text-emerald-400">
+                  NAAC A+
+                </span>
+                <span className="rounded-full border border-yellow-500/30 bg-yellow-500/10 px-3 py-1 text-[10px] font-semibold text-yellow-400">
+                  NIRF 201-300
+                </span>
+              </div>
+            </div>
+          </MacbookScroll>
+        </div>
+
+      </div>
+    </section>
+  );
+}
