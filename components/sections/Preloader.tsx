@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { MechanicalKeyboard, keyForChar } from "@/components/ui/mechanical-keyboard";
+import { RadialGlowBackground } from "@/components/ui/tailwind-css-background-snippet";
 
 // Lines that get "typed" on the keyboard, one character at a time.
 const LINE_1 = "HACKMATRIX 1.0";
@@ -75,11 +76,12 @@ export default function Preloader({ onComplete }: { onComplete: () => void }) {
     <motion.div
       exit={{ opacity: 0, scale: 1.05, filter: "blur(6px)" }}
       transition={{ duration: 0.75, ease: "easeInOut" }}
-      className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#050505] text-white px-5 py-8 overflow-hidden select-none"
+      className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black text-white px-5 py-8 overflow-hidden select-none"
     >
-      {/* Ambient heist glow + scanlines */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(220,38,38,0.16)_0%,transparent_72%)] pointer-events-none" />
-      <div className="absolute inset-0 pointer-events-none opacity-[0.05] bg-[repeating-linear-gradient(to_bottom,#fff_0,#fff_1px,transparent_1px,transparent_3px)]" />
+      {/* Themed radial glow background — black core → deep red → crimson */}
+      <RadialGlowBackground className="pointer-events-none" />
+      {/* Soft crimson bloom behind the content for depth */}
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,rgba(220,38,38,0.14)_0%,transparent_65%)]" />
 
       {/* Emblem */}
       <motion.div
@@ -109,7 +111,7 @@ export default function Preloader({ onComplete }: { onComplete: () => void }) {
           style={{
             fontFamily: "var(--font-flap), ui-monospace, monospace",
             fontSize: "clamp(1.75rem, 8vw, 3.75rem)",
-            textShadow: "0 0 24px rgba(239,68,68,0.45)",
+            textShadow: "0 0 28px rgba(220,38,38,0.5)",
           }}
         >
           {line1}
@@ -117,11 +119,11 @@ export default function Preloader({ onComplete }: { onComplete: () => void }) {
         </h1>
 
         <p
-          className="mt-2 font-bold tracking-[0.32em] text-amber-400"
+          className="mt-2 font-bold tracking-[0.32em] text-red-400"
           style={{
             fontFamily: "var(--font-flap), ui-monospace, monospace",
             fontSize: "clamp(0.9rem, 4vw, 1.6rem)",
-            textShadow: "0 0 18px rgba(245,158,11,0.4)",
+            textShadow: "0 0 18px rgba(220,38,38,0.45)",
           }}
         >
           {line2}

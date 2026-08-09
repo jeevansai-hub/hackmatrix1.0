@@ -89,14 +89,13 @@ export function keyForChar(ch: string): string | undefined {
   return CHAR_TO_KEY[ch] ?? CHAR_TO_KEY[ch.toUpperCase()];
 }
 
-// Site "heist" glow palette — crimson-dominant to match the theme, with an
-// occasional gold key for a premium pop (roughly 1 in 5 keys).
+// Landing-page glow palette — pure crimson family, matching the site's
+// --cipher-red (#dc2626) and its red text gradient (#dc2626 → #f87171).
 const WARM: [number, number, number][] = [
-  [220, 38, 38], // red-600  (primary)
-  [239, 68, 68], // red-500
-  [185, 28, 28], // red-700  (deep)
-  [248, 113, 113], // red-400 (light)
-  [245, 158, 11], // amber-500 (rare gold accent)
+  [220, 38, 38], // red-600  #dc2626  (site primary)
+  [239, 68, 68], // red-500  #ef4444
+  [248, 113, 113], // red-400  #f87171  (site light accent)
+  [185, 28, 28], // red-700  #b91c1c  (deep)
 ];
 
 // Deterministic per-key color (stable across SSR/hydration).
