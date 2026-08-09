@@ -194,7 +194,7 @@ export default function Domains() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2, duration: 0.6 }}
-          className="mt-10 flex gap-1 overflow-x-auto border-y border-white/10 py-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="mt-10 flex gap-1 overflow-x-auto border-y border-white/10 py-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [mask-image:linear-gradient(to_right,transparent,#000_4%,#000_92%,transparent)] sm:[mask-image:none]"
         >
           {DOMAINS.map((dom, i) => (
             <button
@@ -361,6 +361,8 @@ function ConsolePanel({ domain }: { domain: Domain }) {
 
   const onMove = useCallback(
     (e: React.PointerEvent<HTMLDivElement>) => {
+      // Only tilt for mouse — never on touch (would jitter while scrolling).
+      if (e.pointerType !== "mouse") return;
       const r = ref.current?.getBoundingClientRect();
       if (!r) return;
       mx.set((e.clientX - r.left) / r.width - 0.5);
@@ -379,7 +381,7 @@ function ConsolePanel({ domain }: { domain: Domain }) {
       onPointerMove={onMove}
       onPointerLeave={onLeave}
       style={{ rotateX: rx, rotateY: ry, transformPerspective: 1200 }}
-      className="relative rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.04] to-transparent p-6 sm:p-8"
+      className="relative rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.04] to-transparent p-5 sm:p-8"
     >
       {/* corner ticks — technical interface framing */}
       {[

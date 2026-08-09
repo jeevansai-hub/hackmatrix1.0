@@ -11,7 +11,6 @@ import Problems from "@/components/sections/Problems";
 import FAQ from "@/components/sections/FAQ";
 import Organizers from "@/components/sections/Organizers";
 import SocialFooter from "@/components/sections/SocialFooter";
-import { VideoBackground } from "@/components/ui/video-background";
 import { motion, AnimatePresence } from "motion/react";
 
 export default function Home() {
@@ -46,10 +45,8 @@ export default function Home() {
               {/* Hero Section */}
               <Hero />
 
-              {/* Background Video for subsequent sections */}
+              {/* Subsequent sections on the consistent black theme */}
               <div className="relative z-10">
-                <VideoBackground />
-
                 <div className="relative z-10 bg-transparent">
                   <Experience />
                   <Domains />
