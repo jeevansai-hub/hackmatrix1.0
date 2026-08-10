@@ -124,10 +124,14 @@ export default function SocialFooter() {
             <h4 className="mt-6 font-mono text-[11px] uppercase tracking-[0.3em] text-red-500/80">
               Contact
             </h4>
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/55">
+              For any queries or help &amp; support, reach out to us at the email
+              below.
+            </p>
 
             <a
               href={`mailto:${EMAIL}`}
-              className="mt-4 inline-flex items-center gap-2 font-mono text-xs text-white/55 transition-colors hover:text-red-300"
+              className="mt-3 inline-flex items-center gap-2 font-mono text-xs text-white/55 transition-colors hover:text-red-300"
             >
               <svg
                 className="h-4 w-4"

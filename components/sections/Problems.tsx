@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useCallback, useSyncExternalStore } from "react";
+import React, { useState, useEffect, useCallback, useRef, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import {
   motion,
@@ -393,22 +393,74 @@ function PdfViewer({
   problems: PS[];
 }) {
   const [page, setPage] = useState(startPage);
-  const go = useCallback(
-    (p: number) => setPage(Math.min(TOTAL_PAGES, Math.max(1, p))),
-    [],
-  );
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const pageRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const pageRef = useRef(startPage);
+  useEffect(() => {
+    pageRef.current = page;
+  }, [page]);
+
   const mounted = useSyncExternalStore(
     () => () => {},
     () => true,
     () => false,
   );
 
+  // Smooth-scroll the viewer to a given page image.
+  const go = useCallback((p: number) => {
+    const target = Math.min(TOTAL_PAGES, Math.max(1, p));
+    const el = pageRefs.current[target - 1];
+    const container = scrollRef.current;
+    if (el && container) {
+      container.scrollTo({ top: el.offsetTop - 12, behavior: "smooth" });
+    }
+    setPage(target);
+  }, []);
+
+  // Open directly at the requested PS page (no animation on first paint).
+  useEffect(() => {
+    const el = pageRefs.current[startPage - 1];
+    const container = scrollRef.current;
+    if (el && container) container.scrollTop = el.offsetTop - 12;
+  }, [startPage]);
+
+  // Derive the active page from scroll position — scrolling moves through
+  // the statements naturally (essential on mobile, where paging is by swipe).
+  useEffect(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+    let raf = 0;
+    const onScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const mid = container.scrollTop + container.clientHeight / 2;
+        let best = 1;
+        let bestDist = Infinity;
+        pageRefs.current.forEach((el, i) => {
+          if (!el) return;
+          const center = el.offsetTop + el.offsetHeight / 2;
+          const d = Math.abs(center - mid);
+          if (d < bestDist) {
+            bestDist = d;
+            best = i + 1;
+          }
+        });
+        setPage(best);
+      });
+    };
+    container.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      container.removeEventListener("scroll", onScroll);
+      cancelAnimationFrame(raf);
+    };
+  }, []);
+
   // Esc to close, arrows to page
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
-      else if (e.key === "ArrowRight") setPage((p) => Math.min(TOTAL_PAGES, p + 1));
-      else if (e.key === "ArrowLeft") setPage((p) => Math.max(1, p - 1));
+      else if (e.key === "ArrowRight") go(pageRef.current + 1);
+      else if (e.key === "ArrowLeft") go(pageRef.current - 1);
     };
     window.addEventListener("keydown", onKey);
     document.body.style.overflow = "hidden";
@@ -416,7 +468,7 @@ function PdfViewer({
       window.removeEventListener("keydown", onKey);
       document.body.style.overflow = "";
     };
-  }, [onClose]);
+  }, [onClose, go]);
 
   // active PS = the last one whose page <= current page
   const activePs =
@@ -505,32 +557,69 @@ function PdfViewer({
             ))}
           </div>
 
-          {/* page preview — rendered page images (work inline on mobile, unlike an embedded PDF) */}
-          <div className="relative min-w-0 flex-1 overflow-y-auto bg-neutral-900 p-3 sm:p-4">
-            <img
-              key={page}
-              src={`/problem-statements/ps-${String(page).padStart(2, "0")}.jpg`}
-              alt={`Problem statements page ${page}`}
-              loading="eager"
-              className="mx-auto block w-full max-w-3xl rounded-md shadow-2xl"
-            />
+          {/* pages — continuous vertical scroll of rendered images. Works inline
+              on mobile (an embedded PDF only offered an "Open" prompt there). */}
+          <div ref={scrollRef} className="relative min-w-0 flex-1 overflow-y-auto bg-neutral-900">
+            <div className="mx-auto flex max-w-3xl flex-col gap-3 p-3 sm:gap-4 sm:p-4">
+              {Array.from({ length: TOTAL_PAGES }, (_, i) => i + 1).map((p) => (
+                <div
+                  key={p}
+                  ref={(el) => {
+                    pageRefs.current[p - 1] = el;
+                  }}
+                  className="relative overflow-hidden rounded-md bg-neutral-800 shadow-2xl"
+                  style={{ aspectRatio: "1191 / 1684" }}
+                >
+                  <img
+                    src={`/problem-statements/ps-${String(p).padStart(2, "0")}.jpg`}
+                    alt={`Problem statements page ${p}`}
+                    loading={p <= 2 ? "eager" : "lazy"}
+                    className="absolute inset-0 h-full w-full object-contain"
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* bottom bar: page nav */}
-        <div className="flex items-center justify-between gap-3 border-t border-white/10 bg-black/40 px-4 py-3 sm:px-5">
-          <span className="font-mono text-[11px] tracking-[0.2em] text-white/60">
-            PAGE {String(page).padStart(2, "0")} / {TOTAL_PAGES}
-          </span>
+        {/* bottom bar: page nav — two rows on mobile so nothing overlaps */}
+        <div className="flex flex-col gap-2.5 border-t border-white/10 bg-black/40 px-4 py-3 sm:px-5">
+          <div className="flex items-center justify-between gap-3">
+            <span className="shrink-0 font-mono text-[11px] tracking-[0.2em] text-white/60">
+              PAGE {String(page).padStart(2, "0")} / {TOTAL_PAGES}
+            </span>
 
-          {/* mobile PS jump */}
+            <div className="flex shrink-0 items-center gap-2">
+              <button
+                onClick={() => go(page - 1)}
+                disabled={page <= 1}
+                aria-label="Previous page"
+                className="inline-flex items-center gap-1 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 font-mono text-[10px] tracking-[0.15em] text-white/80 transition-colors hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-30"
+              >
+                <ChevronLeft className="h-3.5 w-3.5" />
+                <span className="hidden sm:inline">PREV</span>
+              </button>
+              <button
+                onClick={() => go(page + 1)}
+                disabled={page >= TOTAL_PAGES}
+                aria-label="Next page"
+                className="inline-flex items-center gap-1 rounded-full border border-red-500/40 bg-red-500/10 px-3 py-1.5 font-mono text-[10px] tracking-[0.15em] text-red-300 transition-colors hover:bg-red-500/20 disabled:cursor-not-allowed disabled:opacity-30"
+              >
+                <span className="hidden sm:inline">NEXT</span>
+                <ChevronRight className="h-3.5 w-3.5" />
+              </button>
+            </div>
+          </div>
+
+          {/* PS jump — full width, mobile/tablet only */}
           <select
             value={activePs}
             onChange={(e) => {
               const ps = problems.find((p) => p.id === e.target.value);
               if (ps) go(ps.page);
             }}
-            className="rounded-md border border-white/15 bg-black px-2 py-1 font-mono text-[10px] text-white/80 md:hidden"
+            aria-label="Jump to problem statement"
+            className="w-full truncate rounded-md border border-white/15 bg-black px-2.5 py-2 font-mono text-[11px] text-white/80 md:hidden"
           >
             {problems.map((p) => (
               <option key={p.id} value={p.id}>
@@ -538,25 +627,6 @@ function PdfViewer({
               </option>
             ))}
           </select>
-
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => go(page - 1)}
-              disabled={page <= 1}
-              className="inline-flex items-center gap-1 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 font-mono text-[10px] tracking-[0.15em] text-white/80 transition-colors hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-30"
-            >
-              <ChevronLeft className="h-3.5 w-3.5" />
-              <span className="hidden sm:inline">PREV</span>
-            </button>
-            <button
-              onClick={() => go(page + 1)}
-              disabled={page >= TOTAL_PAGES}
-              className="inline-flex items-center gap-1 rounded-full border border-red-500/40 bg-red-500/10 px-3 py-1.5 font-mono text-[10px] tracking-[0.15em] text-red-300 transition-colors hover:bg-red-500/20 disabled:cursor-not-allowed disabled:opacity-30"
-            >
-              <span className="hidden sm:inline">NEXT</span>
-              <ChevronRight className="h-3.5 w-3.5" />
-            </button>
-          </div>
         </div>
       </motion.div>
     </motion.div>,

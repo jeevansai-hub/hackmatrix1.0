@@ -162,7 +162,7 @@ export default function Organizers() {
           </motion.div>
 
           {/* Two faculty coordinators */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 items-stretch lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
             {facultyCoordinators.map((f, i) => (
               <motion.div
                 key={f.name}
@@ -170,8 +170,9 @@ export default function Organizers() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.12, duration: 0.5 }}
+                className="h-full"
               >
-                <CardContainer className="w-full">
+                <CardContainer className="h-full w-full" containerClassName="h-full w-full py-0">
                   <CardBody className="group/card flex h-full w-full flex-col rounded-2xl border border-white/10 bg-gradient-to-b from-zinc-900 via-black to-zinc-950 p-6 transition-all duration-300 hover:border-red-500/40 hover:shadow-2xl hover:shadow-red-600/10">
                     <CardItem translateZ="50" className="flex w-full items-center gap-4">
                       <img
