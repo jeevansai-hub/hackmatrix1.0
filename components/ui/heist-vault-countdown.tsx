@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { cn } from "@/lib/utils";
 
@@ -12,17 +12,16 @@ interface HeistVaultCountdownProps {
 }
 
 const DigitFlap = ({ value, label, isUrgentStrobe, compact }: { value: number; label: string; isUrgentStrobe?: boolean; compact?: boolean }) => {
-  const [prevVal, setPrevVal] = useState(value);
   const [isGlitching, setIsGlitching] = useState(false);
 
   useEffect(() => {
-    if (value !== prevVal) {
-      setIsGlitching(true);
-      const t = setTimeout(() => setIsGlitching(false), 80);
-      setPrevVal(value);
-      return () => clearTimeout(t);
-    }
-  }, [value, prevVal]);
+    const t1 = setTimeout(() => setIsGlitching(true), 0);
+    const t2 = setTimeout(() => setIsGlitching(false), 80);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
+  }, [value]);
 
   const formattedStr = String(value).padStart(2, "0");
 

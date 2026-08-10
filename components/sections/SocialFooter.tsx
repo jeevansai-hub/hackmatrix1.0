@@ -154,15 +154,28 @@ export default function SocialFooter() {
         </div>
 
         {/* ── Bottom bar ── */}
-        <div className="mt-14 flex flex-col items-center justify-between gap-3 border-t border-white/10 pt-6 text-center sm:flex-row sm:text-left">
+        <div className="mt-14 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-6 text-center sm:flex-row sm:text-left">
           <p className="font-mono text-[11px] tracking-wide text-white/40">
             © 2026 <span className="text-white/60">HACKMATRIX</span>. All rights
             reserved.
           </p>
-          <p className="font-mono text-[11px] tracking-wide text-white/30">
-            Designed &amp; Developed by the{" "}
-            <span className="text-red-400/80">HACKMATRIX Team</span>
-          </p>
+          <div className="group relative inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-gradient-to-r from-white/[0.03] via-white/[0.05] to-white/[0.03] px-4 py-2 backdrop-blur-md transition-all duration-300 hover:border-red-500/40 hover:bg-black/60 hover:shadow-lg hover:shadow-red-500/15">
+            <span className="flex h-5 w-5 items-center justify-center rounded-full border border-red-500/30 bg-red-500/10 font-mono text-[10px] font-bold text-red-400 shadow-sm shadow-red-500/20">
+              &lt;/&gt;
+            </span>
+            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/45">
+              Developed by
+            </span>
+            <div className="flex items-center gap-1.5 font-mono text-xs font-bold">
+              <span className="bg-gradient-to-r from-white via-red-100 to-red-400 bg-clip-text text-transparent font-extrabold tracking-wide drop-shadow-sm">
+                M. Jeevan Sai
+              </span>
+              <span className="text-[10px] font-semibold text-red-500/60">&amp;</span>
+              <span className="bg-gradient-to-r from-white via-red-100 to-red-400 bg-clip-text text-transparent font-extrabold tracking-wide drop-shadow-sm">
+                L. Prasanth
+              </span>
+            </div>
+          </div>
         </div>
       </div>
 

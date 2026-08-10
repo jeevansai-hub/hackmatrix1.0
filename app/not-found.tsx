@@ -61,10 +61,10 @@ export default function NotFound() {
           <Link href="/" className="text-red-500 font-bold hover:text-red-400 border-b-2 border-red-500 pb-1">
             HOME
           </Link>
-          <a href="/#tracks" className="hover:text-white transition-colors">CHARACTER</a>
-          <a href="/#timeline" className="hover:text-white transition-colors">HEIST PLAN</a>
-          <a href="/#prizes" className="hover:text-white transition-colors">GALLERY</a>
-          <a href="/#about" className="hover:text-white transition-colors">ABOUT</a>
+          <Link href="/#tracks" className="hover:text-white transition-colors">CHARACTER</Link>
+          <Link href="/#timeline" className="hover:text-white transition-colors">HEIST PLAN</Link>
+          <Link href="/#prizes" className="hover:text-white transition-colors">GALLERY</Link>
+          <Link href="/#about" className="hover:text-white transition-colors">ABOUT</Link>
         </nav>
 
         {/* Icons */}

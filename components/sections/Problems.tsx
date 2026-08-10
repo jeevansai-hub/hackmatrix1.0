@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import {
   motion,
@@ -26,7 +26,7 @@ import {
 
 const PDF_URL = "/hackmatrix-problem-statements.pdf";
 const PDF_FILE = "HackMatrix-1.0-Problem-Statements.pdf";
-const TOTAL_PAGES = 16;
+const TOTAL_PAGES = 8;
 
 interface PS {
   id: string;
@@ -37,23 +37,22 @@ interface PS {
 }
 
 const PROBLEMS: PS[] = [
-  { id: "PS-01", n: "01", title: "SMART COMPLAINT MANAGEMENT", sub: "AI-powered campus complaint routing", page: 1 },
-  { id: "PS-02", n: "02", title: "SMART CLASSROOM ALLOCATION", sub: "Intelligent space & schedule management", page: 3 },
-  { id: "PS-03", n: "03", title: "CAMPUS CLASSROOM NAVIGATOR", sub: "Smart indoor campus navigation", page: 5 },
-  { id: "PS-04", n: "04", title: "DEPARTMENT TIMETABLE SCHEDULING", sub: "Intelligent academic scheduling", page: 7 },
-  { id: "PS-05", n: "05", title: "AI STUDENT HELP DESK", sub: "Natural-language college assistance", page: 9 },
-  { id: "PS-06", n: "06", title: "SMART LOST & FOUND", sub: "Intelligent item matching", page: 11 },
-  { id: "PS-07", n: "07", title: "EXAM SEATING OPTIMIZER", sub: "Automated examination seating", page: 13 },
-  { id: "PS-08", n: "08", title: "FACULTY WORKLOAD BALANCING", sub: "Intelligent workload distribution", page: 15 },
+  { id: "PS-01", n: "01", title: "SMART TRANSPORTATION & MOBILITY", sub: "Intelligent routing for congestion & transit", page: 1 },
+  { id: "PS-02", n: "02", title: "AI ENERGY CONSUMPTION OPTIMIZER", sub: "Detect & reduce wasteful energy usage", page: 2 },
+  { id: "PS-03", n: "03", title: "GENAI RESUME & JOB MATCHING", sub: "Match skills to roles for seekers & recruiters", page: 3 },
+  { id: "PS-04", n: "04", title: "AI AGENT FOR REPAIRING BROKEN APIS", sub: "Auto-diagnose, fix & test failing APIs", page: 4 },
+  { id: "PS-05", n: "05", title: "AI PLANT DISEASE & CROP HEALTH", sub: "Early crop disease detection for farmers", page: 5 },
+  { id: "PS-06", n: "06", title: "SMART COMPLAINT MANAGEMENT", sub: "AI-powered campus complaint routing", page: 6 },
+  { id: "PS-07", n: "07", title: "SMART LOST & FOUND MANAGEMENT", sub: "Intelligent item matching on campus", page: 7 },
+  { id: "PS-08", n: "08", title: "FACULTY WORKLOAD BALANCING", sub: "Intelligent workload distribution", page: 8 },
 ];
 
 export default function Problems() {
   const [viewerOpen, setViewerOpen] = useState(false);
   const [startPage, setStartPage] = useState(1);
-  const [isLaunched, setIsLaunched] = useState(true);
+  const [isLaunched, setIsLaunched] = useState(getInitialProblemStatus);
 
   useEffect(() => {
-    setIsLaunched(getInitialProblemStatus());
     const unsub = subscribeProblemStatus((launched) => {
       setIsLaunched(launched);
     });
@@ -394,15 +393,15 @@ function PdfViewer({
   problems: PS[];
 }) {
   const [page, setPage] = useState(startPage);
-  const [mounted, setMounted] = useState(false);
-
   const go = useCallback(
     (p: number) => setPage(Math.min(TOTAL_PAGES, Math.max(1, p))),
     [],
   );
-
-  // Portal only after mount (document exists on the client).
-  useEffect(() => setMounted(true), []);
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
 
   // Esc to close, arrows to page
   useEffect(() => {

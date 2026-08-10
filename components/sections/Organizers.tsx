@@ -48,7 +48,7 @@ const facultyCoordinators = [
     name: "Dr. P. Visweswara Rao",
     role: "Associate Professor, AI&DS · IEEE Senior Member · Advisor, IEEE CIS Student Branch",
     phone: "7794977707",
-    image: "/organizers/pvr.png",
+    image: "/organizers/pvr.jpg",
   },
   {
     name: "Dr. J. Peter Praveen",
@@ -63,27 +63,27 @@ const studentCoordinators = [
   {
     name: "S. Manohar",
     contact: "9381716121",
-    avatar: "/hackmatrix-logo.svg",
+    avatar: "/organizers/manohar.jpg",
   },
   {
     name: "M. Sai Deepika",
     contact: "7981954548",
-    avatar: "/hackmatrix-logo.svg",
+    avatar: "/organizers/deepika.png",
   },
   {
     name: "B. Chaitanya Surya Deva",
     contact: "8143245575",
-    avatar: "/hackmatrix-logo.svg",
+    avatar: "/organizers/chaitanya.jpg",
   },
   {
     name: "R.D.V. Prasad",
     contact: "7382612327",
-    avatar: "/hackmatrix-logo.svg",
+    avatar: "/organizers/prasad.jpg",
   },
   {
     name: "S. Rohit",
     contact: "6300138007",
-    avatar: "/hackmatrix-logo.svg",
+    avatar: "/organizers/rohit.jpg",
   },
 ];
 
@@ -236,11 +236,11 @@ export default function Organizers() {
                 <CardContainer className="w-full">
                   <CardBody className="w-full bg-gradient-to-b from-zinc-900/90 via-black to-zinc-950 border border-white/10 hover:border-red-500/40 rounded-2xl p-5 text-center flex flex-col items-center">
                     <CardItem translateZ="60">
-                      <div className="h-16 w-16 rounded-full overflow-hidden border-2 border-red-500/40 bg-black p-1 mb-3 shadow-lg shadow-red-500/30 flex items-center justify-center">
+                      <div className={`h-16 w-16 rounded-full overflow-hidden border-2 border-red-500/40 bg-black mb-3 shadow-lg shadow-red-500/30 flex items-center justify-center ${s.avatar.endsWith(".svg") ? "p-1" : ""}`}>
                         <img
                           src={s.avatar}
                           alt={s.name}
-                          className="h-full w-full object-contain"
+                          className={`h-full w-full ${s.avatar.endsWith(".svg") ? "object-contain" : "object-cover"}`}
                         />
                       </div>
                     </CardItem>
@@ -269,6 +269,11 @@ export default function Organizers() {
             }
           >
             <div className="flex flex-col items-center justify-center h-full text-center px-4 py-2 space-y-3.5">
+              <img
+                src="/viit-logo.png"
+                alt="Vignan's Institute of Information Technology"
+                className="h-auto w-[300px] max-w-full object-contain"
+              />
               <span className="text-[10px] font-mono font-semibold tracking-[0.3em] text-red-400 uppercase bg-red-500/10 px-3.5 py-1 rounded-full border border-red-500/30">
                 Department of AI &amp; Data Science
               </span>

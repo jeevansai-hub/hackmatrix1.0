@@ -29,11 +29,11 @@ export function SquigglyText({
 }: SquigglyTextProps) {
   const reactId = useId();
   const safeId = reactId.replace(/[:_]/g, "");
-  const filterId = (i: number) => `squiggly-${safeId}-${i}`;
+  const filterId = React.useCallback((i: number) => `squiggly-${safeId}-${i}`, [safeId]);
 
   const filters = React.useMemo(
     () => Array.from({ length: steps }, (_, i) => `url(#${filterId(i)})`),
-    [steps, safeId],
+    [steps, filterId],
   );
 
   const time = useTime();

@@ -377,10 +377,9 @@ export default function AdminPage() {
 }
 
 function ProblemStatusControlCard() {
-  const [psLaunched, setPsLaunched] = useState(false);
+  const [psLaunched, setPsLaunched] = useState(getInitialProblemStatus);
 
   useEffect(() => {
-    setPsLaunched(getInitialProblemStatus());
     const unsub = subscribeProblemStatus((launched) => {
       setPsLaunched(launched);
     });
