@@ -222,7 +222,7 @@ export default function Navbar() {
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: -8, scale: 0.96 }}
                       transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                      className="absolute right-0 top-[calc(100%+0.7rem)] z-50 w-[17rem] origin-top-right overflow-hidden rounded-2xl border border-white/10 bg-black/90 shadow-[0_24px_60px_-20px_rgba(220,38,38,0.5)] backdrop-blur-2xl sm:w-80"
+                      className="fixed inset-x-3 top-[4.75rem] z-50 origin-top overflow-hidden rounded-2xl border border-white/10 bg-black/90 shadow-[0_24px_60px_-20px_rgba(220,38,38,0.5)] backdrop-blur-2xl sm:absolute sm:inset-x-auto sm:right-0 sm:top-[calc(100%+0.7rem)] sm:w-80 sm:origin-top-right"
                     >
                       <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
                         <span className="flex items-center gap-2 text-sm font-bold text-white">
