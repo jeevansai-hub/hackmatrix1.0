@@ -262,30 +262,25 @@ export default function Organizers() {
               </span>
             }
           >
-            <div className="flex h-full flex-col items-center justify-center gap-1.5 overflow-hidden px-2 py-2 text-center">
+            {/* Laptop screen content — college header at top, accreditation row below */}
+            <div className="flex h-full w-full flex-col items-center justify-center gap-5 px-4 py-5">
+              {/* College header (transparent, trimmed) */}
               <img
-                src="/viit-logo.png"
-                alt="Vignan's Institute of Information Technology"
-                className="h-auto w-[130px] max-w-full shrink-0 object-contain"
+                src="/vignan-header.png"
+                alt="Vignan's Institute of Information Technology (Autonomous), Duvvada, Visakhapatnam"
+                className="h-auto w-[195px] max-w-[50%] shrink-0 object-contain"
               />
-              <h4 className="shrink-0 text-sm font-black leading-tight tracking-tight bg-gradient-to-b from-white to-white/65 bg-clip-text text-transparent">
-                Department of AI &amp; DS
-              </h4>
-              <p className="shrink-0 text-[8px] font-mono tracking-[0.12em] text-white/45">
-                Autonomous · Visakhapatnam · Affiliated to JNTU-GV
-              </p>
-
-              {/* Accreditation strip (NAAC · NIRF · UGC · IIC) — wide, fills the screen */}
+              {/* Accreditation row — NAAC · NIRF · UGC · IIC (CIS SBC) */}
               <img
-                src="/accreditations.png"
-                alt="NAAC A+ (CGPA 3.4/4) · NIRF 2025 India 201-300 · UGC Autonomous · IIC (Ministry of Education Initiative)"
-                className="mx-auto h-auto w-[340px] max-w-[90%] max-h-[132px] shrink-0 object-contain"
+                src="/row1-accreditations.png"
+                alt="NAAC A+ (CGPA 3.4/4) · NIRF 2025 India Ranking 201-300 · UGC Autonomous · Institution's Innovation Council (CIS SBC)"
+                className="h-auto w-[270px] max-w-[66%] shrink-0 object-contain"
               />
-              {/* Student branches & club strip (IEEE SB · CIS SBC · Matrix Club) */}
+              {/* Student branches & club row — IEEE SB · CIS SBC · Matrix Club */}
               <img
-                src="/clubs.png"
+                src="/row2-clubs.png"
                 alt="Vignan's Visakhapatnam IEEE Student Branch · IEEE Computational Intelligence Society Student Branch Chapter (CIS SBC) · Matrix Club AI&DS VIIT"
-                className="mx-auto h-auto w-[330px] max-w-[88%] max-h-[106px] shrink-0 object-contain"
+                className="h-auto w-[260px] max-w-[64%] shrink-0 object-contain"
               />
             </div>
           </MacbookScroll>
