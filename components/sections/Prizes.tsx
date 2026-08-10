@@ -66,25 +66,6 @@ export default function Prizes() {
           Compete across AI/ML, Cloud, Cybersecurity &amp; Robotics tracks to win cash rewards, trophies, and exciting prizes!
         </motion.p>
 
-        {/* Throw Money Interactive Button */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.3 }}
-          className="mt-6 flex justify-center items-center gap-3"
-        >
-          <button
-            onClick={throwMoney}
-            className="group relative inline-flex items-center gap-2 rounded-full border border-yellow-500/40 bg-yellow-500/10 px-6 py-2.5 text-sm font-bold text-yellow-300 shadow-lg shadow-yellow-500/10 backdrop-blur-md transition-all hover:scale-105 hover:bg-yellow-500/20 active:scale-95 cursor-pointer z-30"
-          >
-            <span className="text-lg animate-bounce">💸</span>
-            <span>Make It Rain Money! (Click to Throw 💰)</span>
-            <span className="text-xs bg-yellow-400/20 rounded-full px-2 py-0.5 text-yellow-200 font-mono">
-              ₹10,000+
-            </span>
-          </button>
-        </motion.div>
-
         {/* ── Main Showcase 3D Card ── */}
         <div className="mt-12 flex justify-center w-full">
           <CardContainer className="w-full max-w-2xl" containerClassName="py-0 w-full">
@@ -175,10 +156,9 @@ export default function Prizes() {
                   translateZ={50}
                   as="button"
                   onClick={throwMoney}
-                  className="px-5 py-2.5 rounded-full bg-red-600 hover:bg-red-500 text-white text-xs font-bold shadow-lg shadow-red-900/40 transition-all cursor-pointer flex items-center gap-1.5"
+                  className="px-5 py-2.5 rounded-full bg-red-600 hover:bg-red-500 text-white text-xs font-bold shadow-lg shadow-red-900/40 transition-all cursor-pointer"
                 >
-                  <span>Throw Cash</span>
-                  <span>💸</span>
+                  Throw Cash
                 </CardItem>
               </div>
             </CardBody>

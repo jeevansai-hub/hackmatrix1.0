@@ -7,6 +7,27 @@ import {
   useSpring,
   useTransform,
 } from "motion/react";
+import {
+  Code2,
+  Cpu,
+  FileCode2,
+  FileCode,
+  Atom,
+  Server,
+  Zap,
+  Brain,
+  Boxes,
+  Container,
+  Network,
+  Cloud,
+  Radio,
+  CircuitBoard,
+  Terminal,
+  Database,
+  Layers,
+  Workflow,
+  Sparkles,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /* ────────────────────────────────────────────────────────────
@@ -113,11 +134,40 @@ const DOMAINS: Domain[] = [
 
 const ACCENT = "#dc2626";
 
-const TECH = [
-  "PYTHON", "C++", "JAVASCRIPT", "TYPESCRIPT", "REACT", "NODE.JS", "FASTAPI",
-  "PYTORCH", "TENSORFLOW", "DOCKER", "KUBERNETES", "AWS", "GCP", "IoT",
-  "ARDUINO", "RASPBERRY PI", "RUST", "GO", "POSTGRES", "REDIS", "WEBGL",
+const TECH_LUCIDE = [
+  { name: "PYTHON", Icon: Code2 },
+  { name: "C++", Icon: Cpu },
+  { name: "JAVASCRIPT", Icon: FileCode2 },
+  { name: "TYPESCRIPT", Icon: FileCode },
+  { name: "REACT", Icon: Atom },
+  { name: "NODE.JS", Icon: Server },
+  { name: "FASTAPI", Icon: Zap },
+  { name: "PYTORCH", Icon: Brain },
+  { name: "TENSORFLOW", Icon: Boxes },
+  { name: "DOCKER", Icon: Container },
+  { name: "KUBERNETES", Icon: Network },
+  { name: "AWS", Icon: Cloud },
+  { name: "GCP", Icon: Sparkles },
+  { name: "IoT", Icon: Radio },
+  { name: "ARDUINO", Icon: CircuitBoard },
+  { name: "RUST", Icon: Terminal },
+  { name: "GO", Icon: Workflow },
+  { name: "POSTGRES", Icon: Database },
+  { name: "REDIS", Icon: Layers },
 ];
+
+function TechMark({ item }: { item: { name: string; Icon: React.ElementType } }) {
+  const IconComponent = item.Icon;
+  return (
+    <span className="group/tech flex shrink-0 items-center gap-2">
+      <IconComponent className="h-4 w-4 shrink-0 text-red-500/80 transition-transform group-hover/tech:scale-110 sm:h-4.5 sm:w-4.5" />
+      <span className="whitespace-nowrap font-mono text-xs font-semibold tracking-[0.14em] text-white/75 sm:text-sm">
+        {item.name}
+      </span>
+      <span className="ml-6 text-white/20">/</span>
+    </span>
+  );
+}
 
 export default function Domains() {
   const [active, setActive] = useState(0);
@@ -280,16 +330,10 @@ export default function Domains() {
             EXAMPLES OF TECHNOLOGIES YOU MAY EXPLORE
           </p>
 
-          <div className="relative mt-4 overflow-hidden border-y border-white/10 py-4 [mask-image:linear-gradient(to_right,transparent,#000_8%,#000_92%,transparent)]">
-            <div className="flex w-max animate-[hm-marquee_38s_linear_infinite] gap-8">
-              {[...TECH, ...TECH].map((t, i) => (
-                <span
-                  key={i}
-                  className="font-mono text-sm tracking-[0.15em] text-white/45"
-                >
-                  {t}
-                  <span className="ml-8 text-red-500/40">/</span>
-                </span>
+          <div className="relative mt-4 overflow-hidden border-y border-white/10 py-4 [mask-image:linear-gradient(to_right,transparent,#000_8%,#000_92%,transparent)] sm:py-5">
+            <div className="flex w-max animate-[hm-marquee_28s_linear_infinite] gap-7 will-change-transform transform-gpu sm:gap-8">
+              {[...TECH_LUCIDE, ...TECH_LUCIDE].map((item, i) => (
+                <TechMark key={`${item.name}-${i}`} item={item} />
               ))}
             </div>
           </div>
@@ -340,8 +384,8 @@ export default function Domains() {
         </div>
       </div>
 
-      {/* marquee keyframes */}
-      <style>{`@keyframes hm-marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}`}</style>
+      {/* marquee keyframes (GPU accelerated translate3d) */}
+      <style>{`@keyframes hm-marquee{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}`}</style>
     </section>
   );
 }
@@ -386,19 +430,6 @@ function ConsolePanel({ domain }: { domain: Domain }) {
       style={{ rotateX: rx, rotateY: ry, transformPerspective: 1200 }}
       className="relative rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.04] to-transparent p-5 sm:p-8"
     >
-      {/* corner ticks — technical interface framing */}
-      {[
-        "left-3 top-3 border-l border-t",
-        "right-3 top-3 border-r border-t",
-        "left-3 bottom-3 border-l border-b",
-        "right-3 bottom-3 border-r border-b",
-      ].map((c) => (
-        <span
-          key={c}
-          className={cn("pointer-events-none absolute h-3 w-3 border-red-500/50", c)}
-        />
-      ))}
-
       <AnimatePresence mode="wait">
         <motion.div
           key={domain.idx}
@@ -469,256 +500,303 @@ function FlowLine({ items }: { items: string[] }) {
   );
 }
 
-/* ══════════════════════ DOMAIN VISUALS ══════════════════════ */
+/* ══════════════════════ DOMAIN VISUALS (ENGINEERING TELEMETRY HUD) ══════════════════════ */
 
-const box =
-  "h-48 w-48 sm:h-60 sm:w-60 rounded-xl border border-white/10 bg-black/40";
+const consoleShell =
+  "relative w-full max-w-[300px] sm:w-[320px] h-[235px] sm:h-[250px] rounded-xl border border-white/10 bg-[#09090b]/90 p-3.5 sm:p-4 font-mono text-[10px] shadow-2xl shadow-black/80 backdrop-blur-md overflow-hidden flex flex-col justify-between border-box mx-auto lg:mx-0";
 
 function DomainVisual({ visual }: { visual: Visual }) {
   if (visual === "ai") {
-    // scattered data points reorganise into a structured lattice
-    const grid = Array.from({ length: 16 }, (_, i) => ({
-      x: 60 + (i % 4) * 40,
-      y: 45 + Math.floor(i / 4) * 40,
-    }));
     return (
-      <svg viewBox="0 0 300 260" className={box}>
-        {grid.map((p, i) => (
-          <motion.circle
-            key={i}
-            r={2.6}
-            fill={i % 5 === 0 ? ACCENT : "#d4d4d8"}
-            initial={{
-              cx: 150 + Math.sin(i * 2.3) * 90,
-              cy: 130 + Math.cos(i * 1.7) * 90,
-              opacity: 0,
-            }}
-            animate={{ cx: p.x, cy: p.y, opacity: 1 }}
-            transition={{ delay: i * 0.03, duration: 0.9, ease: "easeInOut" }}
-          />
-        ))}
-        <VLabels items={["DATA", "MODEL", "INFERENCE"]} />
-      </svg>
+      <div className={consoleShell}>
+        {/* Top telemetry bar */}
+        <div>
+          <div className="flex items-center justify-between border-b border-white/10 pb-1.5 text-[9px] text-white/40">
+            <span className="flex items-center gap-1.5">
+              <span className="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse" />
+              AI_ENGINE // v4.2
+            </span>
+            <span className="text-red-400 font-bold">ONLINE</span>
+          </div>
+
+          <div className="mt-2.5 space-y-1 text-zinc-400 text-[9.5px]">
+            <div className="flex justify-between">
+              <span className="text-white/40">MODEL:</span>
+              <span className="text-white font-medium">NEURAL_TRANSFORMER</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-white/40">PRECISION:</span>
+              <span className="text-red-400 font-bold">FP16 / TENSOR</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-white/40">VAL_LOSS:</span>
+              <span className="text-white font-semibold">0.0014</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Dynamic Neural Grid Visual */}
+        <div className="my-1.5 relative h-16 sm:h-18 w-full rounded-lg border border-white/5 bg-black/50 p-1.5 overflow-hidden flex items-center justify-center">
+          <svg viewBox="0 0 200 70" className="h-full w-full">
+            {/* Connections */}
+            <motion.path
+              d="M 20 35 Q 60 10, 100 35 T 180 35"
+              fill="none"
+              stroke="rgba(220,38,38,0.5)"
+              strokeWidth="1.5"
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{ duration: 1.5, repeat: Infinity, repeatType: "reverse" }}
+            />
+            <motion.path
+              d="M 20 35 Q 60 60, 100 35 T 180 35"
+              fill="none"
+              stroke="rgba(255,255,255,0.2)"
+              strokeWidth="1"
+            />
+            {/* Nodes */}
+            {[20, 60, 100, 140, 180].map((x, i) => (
+              <motion.circle
+                key={i}
+                cx={x}
+                cy={35 + Math.sin(i) * 15}
+                r={i % 2 === 0 ? 3.5 : 2.5}
+                fill={i % 2 === 0 ? ACCENT : "#ffffff"}
+                animate={{ scale: [1, 1.3, 1] }}
+                transition={{ duration: 2, delay: i * 0.2, repeat: Infinity }}
+              />
+            ))}
+          </svg>
+        </div>
+
+        {/* Footer status readout */}
+        <div className="border-t border-white/10 pt-1.5 flex items-center justify-between text-[9px]">
+          <span className="text-white/40">LATENCY: <strong className="text-white">1.2ms</strong></span>
+          <span className="text-red-400/80 tracking-widest font-bold">INFERENCE ACTIVE</span>
+        </div>
+      </div>
     );
   }
 
   if (visual === "cloud") {
-    // USER → API → services → DATA
     return (
-      <svg viewBox="0 0 300 260" className={box}>
-        {(
-          [
-            [150, 34, 150, 84],
-            [150, 84, 70, 140],
-            [150, 84, 150, 140],
-            [150, 84, 230, 140],
-            [70, 140, 150, 205],
-            [150, 140, 150, 205],
-            [230, 140, 150, 205],
-          ] as const
-        ).map((l, i) => (
-          <motion.line
-            key={i}
-            x1={l[0]}
-            y1={l[1]}
-            x2={l[2]}
-            y2={l[3]}
-            stroke="rgba(220,38,38,0.45)"
-            strokeWidth={1}
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: 1 }}
-            transition={{ delay: 0.1 + i * 0.08, duration: 0.5 }}
-          />
-        ))}
-        {(
-          [
-            [150, 34, "USER"],
-            [70, 140, ""],
-            [150, 140, ""],
-            [230, 140, ""],
-            [150, 205, "DATA"],
-          ] as const
-        ).map(([x, y], i) => (
-          <motion.rect
-            key={i}
-            x={(x as number) - 12}
-            y={(y as number) - 9}
-            width={24}
-            height={18}
-            rx={3}
-            fill="#18181b"
-            stroke={i === 0 || i === 4 ? ACCENT : "rgba(160,170,190,0.5)"}
-            strokeWidth={1}
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: i * 0.08, type: "spring", stiffness: 300 }}
-            style={{ transformOrigin: `${x}px ${y}px` }}
-          />
-        ))}
-        <circle cx={150} cy={84} r={13} fill="#18181b" stroke={ACCENT} strokeWidth={1} />
-        <text x={150} y={88} textAnchor="middle" className="fill-white" style={{ font: "700 9px monospace" }}>API</text>
-      </svg>
+      <div className={consoleShell}>
+        {/* Top telemetry bar */}
+        <div>
+          <div className="flex items-center justify-between border-b border-white/10 pb-1.5 text-[9px] text-white/40">
+            <span className="flex items-center gap-1.5">
+              <span className="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse" />
+              CLOUD_MESH // SYS
+            </span>
+            <span className="text-white font-bold">HEALTHY</span>
+          </div>
+
+          <div className="mt-2.5 space-y-1 text-zinc-400 text-[9.5px]">
+            <div className="flex justify-between">
+              <span className="text-white/40">REGIONS:</span>
+              <span className="text-white font-medium">US-EAST / EU-WEST</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-white/40">THROUGHPUT:</span>
+              <span className="text-red-400 font-bold">4.8 GB/s</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-white/40">AVAILABILITY:</span>
+              <span className="text-white font-semibold">99.999%</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Node Traffic Graphic */}
+        <div className="my-1.5 relative h-16 sm:h-18 w-full rounded-lg border border-white/5 bg-black/50 p-1.5 flex items-center justify-around">
+          {[
+            { label: "EDGE", color: "#e4e4e7" },
+            { label: "GATEWAY", color: ACCENT },
+            { label: "CLUSTER", color: "#3f3f46" },
+          ].map((item, idx) => (
+            <div key={idx} className="flex flex-col items-center gap-0.5">
+              <div
+                className="h-7 sm:h-8 w-11 sm:w-12 rounded border border-white/15 bg-white/5 flex items-center justify-center font-bold text-[8px]"
+                style={{ borderColor: item.color }}
+              >
+                {item.label}
+              </div>
+              <span className="text-[7px] text-white/40">0{idx + 1}_NODE</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Footer status readout */}
+        <div className="border-t border-white/10 pt-1.5 flex items-center justify-between text-[9px]">
+          <span className="text-white/40">AUTOSCALE: <strong className="text-white">ENABLED</strong></span>
+          <span className="text-red-400/80 tracking-widest font-bold">DISTRIBUTED</span>
+        </div>
+      </div>
     );
   }
 
   if (visual === "security") {
-    // perimeter with a scanning sweep
     return (
-      <svg viewBox="0 0 300 260" className={box}>
-        <motion.polygon
-          points="150,30 250,90 250,180 150,230 50,180 50,90"
-          fill="none"
-          stroke="rgba(160,170,190,0.35)"
-          strokeWidth={1}
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: 1 }}
-        />
-        <motion.polygon
-          points="150,70 210,105 210,165 150,195 90,165 90,105"
-          fill="rgba(220,38,38,0.06)"
-          stroke={ACCENT}
-          strokeWidth={1.2}
-          initial={{ pathLength: 0, opacity: 0 }}
-          animate={{ pathLength: 1, opacity: 1 }}
-          transition={{ delay: 0.3, duration: 0.9 }}
-        />
-        {/* scanning sweep line */}
-        <motion.line
-          x1={50}
-          x2={250}
-          y1={30}
-          y2={30}
-          stroke={ACCENT}
-          strokeWidth={1}
-          opacity={0.7}
-          animate={{ y1: [40, 220, 40], y2: [40, 220, 40] }}
-          transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <circle cx={150} cy={132} r={4} fill={ACCENT} />
-      </svg>
+      <div className={consoleShell}>
+        {/* Top telemetry bar */}
+        <div>
+          <div className="flex items-center justify-between border-b border-white/10 pb-1.5 text-[9px] text-white/40">
+            <span className="flex items-center gap-1.5">
+              <span className="h-1.5 w-1.5 rounded-full bg-red-500 animate-ping" />
+              ZERO_TRUST // PROTOCOL
+            </span>
+            <span className="text-red-400 font-bold">LOCKED</span>
+          </div>
+
+          <div className="mt-2.5 space-y-1 text-zinc-400 text-[9.5px]">
+            <div className="flex justify-between">
+              <span className="text-white/40">CIPHER:</span>
+              <span className="text-white font-mono font-medium">ECDHE_RSA_AES256</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-white/40">KEY_HASH:</span>
+              <span className="text-red-400 font-mono font-bold">0x7F8A...2B10</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Live Packet Terminal Inspection */}
+        <div className="my-1.5 relative h-16 sm:h-18 w-full rounded-lg border border-white/10 bg-black/80 p-1.5 flex flex-col justify-center gap-0.5 overflow-hidden">
+          <div className="flex items-center gap-1 text-[8px] font-mono text-white">
+            <span className="text-white/40">[0xFA49]</span>
+            <span>TLS 1.3 HANDSHAKE VERIFIED</span>
+          </div>
+          <div className="flex items-center gap-1 text-[8px] font-mono text-zinc-400">
+            <span className="text-white/40">[PACKET]</span>
+            <span>192.168.1.104 → PORT 443</span>
+          </div>
+          <div className="flex items-center gap-1 text-[8px] font-mono text-red-400">
+            <span className="text-white/40">[GUARD]</span>
+            <span className="font-bold">0 DROPPED</span>
+          </div>
+          <motion.div
+            className="mt-0.5 h-0.5 w-full bg-gradient-to-r from-red-600 via-red-400 to-transparent"
+            animate={{ opacity: [0.3, 1, 0.3] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+          />
+        </div>
+
+        {/* Footer status readout */}
+        <div className="border-t border-white/10 pt-1.5 flex items-center justify-between text-[9px]">
+          <span className="text-white/40">ISOLATION: <strong className="text-white">STRICT</strong></span>
+          <span className="text-white tracking-widest font-bold">100% SECURE</span>
+        </div>
+      </div>
     );
   }
 
   if (visual === "robotics") {
-    // minimal mechanical assembly with a rotating gear
     return (
-      <svg viewBox="0 0 300 260" className={box}>
-        <rect x={70} y={110} width={160} height={44} rx={4} fill="#18181b" stroke="rgba(160,170,190,0.4)" />
-        <line x1={70} y1={132} x2={40} y2={132} stroke="rgba(160,170,190,0.4)" />
-        <line x1={230} y1={132} x2={260} y2={132} stroke="rgba(160,170,190,0.4)" />
-        <circle cx={40} cy={132} r={6} fill="none" stroke={ACCENT} />
-        <circle cx={260} cy={132} r={6} fill="none" stroke={ACCENT} />
-        {/* rotating gear */}
-        <motion.g
-          animate={{ rotate: 360 }}
-          transition={{ duration: 9, repeat: Infinity, ease: "linear" }}
-          style={{ transformOrigin: "150px 132px" }}
-        >
-          {Array.from({ length: 8 }).map((_, i) => {
-            const a = (i / 8) * Math.PI * 2;
-            return (
-              <rect
-                key={i}
-                x={148}
-                y={100}
-                width={4}
-                height={9}
-                fill={ACCENT}
-                style={{ transformOrigin: "150px 132px", transform: `rotate(${(a * 180) / Math.PI}deg)` }}
+      <div className={consoleShell}>
+        {/* Top telemetry bar */}
+        <div>
+          <div className="flex items-center justify-between border-b border-white/10 pb-1.5 text-[9px] text-white/40">
+            <span className="flex items-center gap-1.5">
+              <span className="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse" />
+              6-DOF // KINEMATICS
+            </span>
+            <span className="text-red-400 font-bold">ARM_ACTIVE</span>
+          </div>
+
+          <div className="mt-2.5 space-y-1 text-zinc-400 text-[9.5px]">
+            <div className="flex justify-between">
+              <span className="text-white/40">JOINTS:</span>
+              <span className="text-white font-mono font-medium">J1:+45° | J2:-12° | J3:+90°</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-white/40">MOTOR PWM:</span>
+              <span className="text-red-400 font-mono font-bold">8,450 RPM (94%)</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Kinematic Servo Bars & Sensor Array */}
+        <div className="my-1.5 relative h-16 sm:h-18 w-full rounded-lg border border-white/10 bg-black/80 p-1.5 flex flex-col justify-center gap-1 overflow-hidden">
+          <div className="space-y-0.5">
+            <div className="flex items-center justify-between text-[8px] font-mono">
+              <span className="text-white/50">SERVO_A (BASE)</span>
+              <span className="text-red-400 font-bold">98% POWER</span>
+            </div>
+            <div className="h-1.5 w-full rounded-full bg-white/10 overflow-hidden">
+              <motion.div
+                className="h-full bg-red-500"
+                animate={{ width: ["90%", "98%", "90%"] }}
+                transition={{ duration: 2, repeat: Infinity }}
               />
-            );
-          })}
-          <circle cx={150} cy={132} r={18} fill="#0a0a0a" stroke={ACCENT} strokeWidth={1.4} />
-          <circle cx={150} cy={132} r={5} fill={ACCENT} />
-        </motion.g>
-        {/* sensor pulse */}
-        <motion.circle
-          cx={150}
-          cy={70}
-          r={5}
-          fill="none"
-          stroke={ACCENT}
-          animate={{ r: [4, 12, 4], opacity: [0.9, 0, 0.9] }}
-          transition={{ duration: 2, repeat: Infinity }}
-        />
-        <circle cx={150} cy={70} r={2.5} fill="#d4d4d8" />
-      </svg>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between text-[8px] font-mono text-zinc-300 pt-0.5 border-t border-white/5">
+            <span className="text-white/40">LiDAR RANGE:</span>
+            <span className="text-white font-bold">2.8m (CLEAR)</span>
+          </div>
+        </div>
+
+        {/* Footer status readout */}
+        <div className="border-t border-white/10 pt-1.5 flex items-center justify-between text-[9px]">
+          <span className="text-white/40">FEEDBACK: <strong className="text-white">CLOSED_LOOP</strong></span>
+          <span className="text-red-400/80 tracking-widest font-bold">CALIBRATED</span>
+        </div>
+      </div>
     );
   }
 
-  // open — five systems converge into a new system
-  const sources = [
-    [50, 40],
-    [50, 90],
-    [50, 140],
-    [50, 190],
-    [50, 220],
-  ];
+  // open — cross-disciplinary tech matrix
   return (
-    <svg viewBox="0 0 300 260" className={box}>
-      {sources.map(([x, y], i) => (
-        <motion.line
-          key={i}
-          x1={x}
-          y1={y}
-          x2={180}
-          y2={130}
-          stroke={i === 4 ? ACCENT : "rgba(160,170,190,0.35)"}
-          strokeWidth={1}
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ delay: i * 0.1, duration: 0.7 }}
-        />
-      ))}
-      {["AI", "CLOUD", "SEC", "ROBO", "OPEN"].map((t, i) => (
-        <text
-          key={t}
-          x={20}
-          y={sources[i][1] + 3}
-          className="fill-white/50"
-          style={{ font: "700 8px monospace" }}
-        >
-          {t}
-        </text>
-      ))}
-      <motion.circle
-        cx={180}
-        cy={130}
-        r={22}
-        fill="rgba(220,38,38,0.08)"
-        stroke={ACCENT}
-        strokeWidth={1.4}
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{ delay: 0.6, type: "spring", stiffness: 260 }}
-        style={{ transformOrigin: "180px 130px" }}
-      />
-      <text x={180} y={133} textAnchor="middle" className="fill-white" style={{ font: "700 8px monospace" }}>
-        NEW
-      </text>
-    </svg>
-  );
-}
+    <div className={consoleShell}>
+      {/* Top telemetry bar */}
+      <div>
+        <div className="flex items-center justify-between border-b border-white/10 pb-1.5 text-[9px] text-white/40">
+          <span className="flex items-center gap-1.5">
+            <span className="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse" />
+            OPEN_STACK // MATRIX
+          </span>
+          <span className="text-red-400 font-bold">UNRESTRICTED</span>
+        </div>
 
-function VLabels({ items }: { items: string[] }) {
-  return (
-    <>
-      {items.map((t, i) => (
-        <motion.text
-          key={t}
-          x={252}
-          y={70 + i * 60}
-          textAnchor="end"
-          className="fill-white/40"
-          style={{ font: "700 8px monospace", letterSpacing: "1px" }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.6 + i * 0.15 }}
-        >
-          {t}
-        </motion.text>
-      ))}
-    </>
+        <div className="mt-2.5 space-y-1 text-zinc-400 text-[9.5px]">
+          <div className="flex justify-between">
+            <span className="text-white/40">DOMAINS:</span>
+            <span className="text-white font-medium">CROSS_DISCIPLINARY</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-white/40">INTEROPERABILITY:</span>
+            <span className="text-red-400 font-bold">NATIVE</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-white/40">LIMITS:</span>
+            <span className="text-white font-semibold">NONE</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Cross-Stack Integration Graph */}
+      <div className="my-1.5 relative h-16 sm:h-18 w-full rounded-lg border border-white/5 bg-black/50 p-1.5 flex flex-col justify-center gap-1">
+        {["FINTECH × AI", "IoT × HEALTH", "WEB3 × AR"].map((item, idx) => (
+          <div key={idx} className="flex items-center justify-between text-[8px]">
+            <span className="text-white/60 font-bold">{item}</span>
+            <div className="h-1.5 w-16 sm:w-20 rounded-full bg-white/10 overflow-hidden">
+              <motion.div
+                className="h-full bg-red-500"
+                initial={{ width: "0%" }}
+                animate={{ width: `${70 + idx * 10}%` }}
+                transition={{ duration: 1, delay: idx * 0.2 }}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Footer status readout */}
+      <div className="border-t border-white/10 pt-1.5 flex items-center justify-between text-[9px]">
+        <span className="text-white/40">STACKS: <strong className="text-white">FLEXIBLE</strong></span>
+        <span className="text-red-400/80 tracking-widest font-bold">BUILD ANYTHING</span>
+      </div>
+    </div>
   );
 }

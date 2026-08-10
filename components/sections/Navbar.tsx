@@ -11,6 +11,7 @@ import {
   Menu,
   X,
   ArrowUpRight,
+  Bell,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -26,10 +27,34 @@ const NAV_LINKS = [
 const REGISTER_URL =
   "https://docs.google.com/forms/d/e/1FAIpQLSd5HanrWsfYyQty8iWnHXvGu7NeqM2EEjd4x8nwqq0TJcpCGw/viewform";
 
+// Announcements shown in the header bell. Edit freely — order is newest-first.
+const ANNOUNCEMENTS = [
+  {
+    title: "Registrations are open",
+    desc: "Lock in your team's spot for HackMatrix 1.0.",
+    tag: "NEW",
+    href: REGISTER_URL,
+  },
+  {
+    title: "₹10,000+ prize pool live",
+    desc: "Cash prizes, trophies & swag across every track.",
+    tag: "PRIZES",
+    href: "#prizes",
+  },
+  {
+    title: "Problem statements released",
+    desc: "Explore the challenge tracks before you build.",
+    tag: "TRACKS",
+    href: "#tracks",
+  },
+];
+
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState("home");
   const [open, setOpen] = useState(false);
+  const [notifOpen, setNotifOpen] = useState(false);
+  const [seen, setSeen] = useState(false);
 
   // Condense the bar on scroll + highlight the section under a probe line.
   // Scroll-driven (rather than a thin-band IntersectionObserver) so the active
@@ -105,7 +130,7 @@ export default function Navbar() {
               )}
             >
               <img
-                src="/hackmatrix-logo.svg"
+                src="/hackmatrix-mark.png"
                 alt="HackMatrix"
                 className="h-full w-full object-contain"
               />
@@ -157,6 +182,94 @@ export default function Navbar() {
 
           {/* ── Actions ── */}
           <div className="flex shrink-0 items-center gap-2">
+            {/* Announcements bell — compact, both desktop & mobile */}
+            <div className="relative">
+              <button
+                onClick={() => {
+                  setNotifOpen((v) => !v);
+                  setSeen(true);
+                  setOpen(false);
+                }}
+                aria-label="Announcements"
+                aria-expanded={notifOpen}
+                className={cn(
+                  "relative flex h-9 w-9 items-center justify-center rounded-full border transition-colors",
+                  notifOpen
+                    ? "border-red-500/50 bg-red-500/15 text-red-400"
+                    : "border-white/10 bg-white/5 text-white hover:border-red-500/40 hover:text-red-400",
+                )}
+              >
+                <Bell className="h-4 w-4" strokeWidth={2} />
+                {!seen && (
+                  <span className="absolute right-1.5 top-1.5 flex h-2 w-2">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-75" />
+                    <span className="relative inline-flex h-2 w-2 rounded-full bg-red-500 ring-2 ring-black" />
+                  </span>
+                )}
+              </button>
+
+              <AnimatePresence>
+                {notifOpen && (
+                  <>
+                    {/* click-away backdrop */}
+                    <div
+                      className="fixed inset-0 z-40"
+                      onClick={() => setNotifOpen(false)}
+                    />
+                    <motion.div
+                      key="notif-panel"
+                      initial={{ opacity: 0, y: -8, scale: 0.96 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -8, scale: 0.96 }}
+                      transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                      className="absolute right-0 top-[calc(100%+0.7rem)] z-50 w-[17rem] origin-top-right overflow-hidden rounded-2xl border border-white/10 bg-black/90 shadow-[0_24px_60px_-20px_rgba(220,38,38,0.5)] backdrop-blur-2xl sm:w-80"
+                    >
+                      <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
+                        <span className="flex items-center gap-2 text-sm font-bold text-white">
+                          <Bell className="h-4 w-4 text-red-400" />
+                          Announcements
+                        </span>
+                        <span className="rounded-full bg-red-500/15 px-2 py-0.5 font-mono text-[10px] font-semibold tracking-wider text-red-400">
+                          {ANNOUNCEMENTS.length} NEW
+                        </span>
+                      </div>
+                      <ul className="max-h-[60vh] overflow-y-auto p-1.5">
+                        {ANNOUNCEMENTS.map((a) => {
+                          const external = !a.href.startsWith("#");
+                          return (
+                            <li key={a.title}>
+                              <a
+                                href={a.href}
+                                target={external ? "_blank" : undefined}
+                                rel={external ? "noopener noreferrer" : undefined}
+                                onClick={() => setNotifOpen(false)}
+                                className="group flex gap-3 rounded-xl px-3 py-2.5 transition-colors hover:bg-white/5"
+                              >
+                                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-red-500 shadow-[0_0_8px_rgba(220,38,38,0.9)]" />
+                                <span className="flex min-w-0 flex-col">
+                                  <span className="flex items-center gap-2">
+                                    <span className="truncate text-[13px] font-semibold text-white">
+                                      {a.title}
+                                    </span>
+                                    <span className="shrink-0 rounded bg-white/10 px-1.5 py-0.5 font-mono text-[9px] font-semibold tracking-wider text-white/50">
+                                      {a.tag}
+                                    </span>
+                                  </span>
+                                  <span className="mt-0.5 text-[11px] leading-snug text-white/50">
+                                    {a.desc}
+                                  </span>
+                                </span>
+                              </a>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </motion.div>
+                  </>
+                )}
+              </AnimatePresence>
+            </div>
+
             {/* Register — compact on mobile, full label from sm up.
                 Sits before the menu button in DOM + visual order. */}
             <a
@@ -172,7 +285,10 @@ export default function Navbar() {
             </a>
 
             <button
-              onClick={() => setOpen((v) => !v)}
+              onClick={() => {
+                setOpen((v) => !v);
+                setNotifOpen(false);
+              }}
               aria-label={open ? "Close menu" : "Open menu"}
               aria-expanded={open}
               className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white transition-colors hover:border-red-500/40 hover:text-red-400 lg:hidden"

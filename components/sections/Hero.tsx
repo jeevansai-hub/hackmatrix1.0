@@ -8,7 +8,7 @@ import { HeistVaultCountdown } from "@/components/ui/heist-vault-countdown";
 /** Essential event facts — level 4 of the hierarchy. */
 const FACTS: { label: string; accent?: boolean }[] = [
   { label: "13–14 AUGUST 2026" },
-  { label: "VIIT / DUVVADA" },
+  { label: "VIIT | DUVVADA" },
   { label: "2–4 MEMBERS" },
   { label: "₹400 / TEAM" },
   { label: "₹10,000+ PRIZE POOL", accent: true },

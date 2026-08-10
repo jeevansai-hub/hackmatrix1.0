@@ -13,7 +13,7 @@ const QUICK_LINKS = [
   { label: "Schedule", href: "#timeline" },
   { label: "Prizes", href: "#prizes" },
   { label: "FAQ", href: "#faq" },
-  { label: "Contact", href: "#organizers" },
+  { label: "Contact", href: "tel:+919391936673" },
 ];
 
 export default function SocialFooter() {
@@ -48,7 +48,7 @@ export default function SocialFooter() {
             <a href="#home" className="inline-flex items-center gap-3">
               <span className="flex h-10 w-10 items-center justify-center rounded-full border border-red-500/40 bg-black p-1 shadow-lg shadow-red-600/30">
                 <img
-                  src="/hackmatrix-logo.svg"
+                  src="/hackmatrix-mark.png"
                   alt="HackMatrix"
                   className="h-full w-full object-contain"
                 />
@@ -169,11 +169,11 @@ export default function SocialFooter() {
       {/* oversized brand watermark — closing brand statement */}
       <div
         aria-hidden
-        className="pointer-events-none select-none px-4 pb-4 text-center"
+        className="pointer-events-none select-none overflow-hidden px-4 pb-4 text-center"
       >
         <span
-          className="block font-black leading-none tracking-tighter text-white/[0.035]"
-          style={{ fontSize: "clamp(3rem, 17vw, 13rem)" }}
+          className="block max-w-full font-black leading-none tracking-tighter text-white/[0.035]"
+          style={{ fontSize: "clamp(2.25rem, 13vw, 13rem)" }}
         >
           HACKMATRIX
         </span>

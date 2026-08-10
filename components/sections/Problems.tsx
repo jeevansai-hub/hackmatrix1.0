@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
 import {
   motion,
   AnimatePresence,
@@ -7,6 +8,7 @@ import {
   useSpring,
   useTransform,
 } from "motion/react";
+import { X, Download, ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /* ────────────────────────────────────────────────────────────
@@ -356,11 +358,15 @@ function PdfViewer({
   problems: PS[];
 }) {
   const [page, setPage] = useState(startPage);
+  const [mounted, setMounted] = useState(false);
 
   const go = useCallback(
     (p: number) => setPage(Math.min(TOTAL_PAGES, Math.max(1, p))),
     [],
   );
+
+  // Portal only after mount (document exists on the client).
+  useEffect(() => setMounted(true), []);
 
   // Esc to close, arrows to page
   useEffect(() => {
@@ -381,14 +387,16 @@ function PdfViewer({
   const activePs =
     [...problems].reverse().find((p) => p.page <= page)?.id ?? problems[0].id;
 
-  return (
+  if (!mounted) return null;
+
+  return createPortal(
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.25 }}
       onClick={onClose}
-      className="fixed inset-0 z-[60] flex items-center justify-center bg-black/85 p-3 backdrop-blur-md sm:p-6"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 p-3 backdrop-blur-md sm:p-6"
     >
       <motion.div
         initial={{ opacity: 0, scale: 0.96, y: 14 }}
@@ -414,14 +422,15 @@ function PdfViewer({
               download={PDF_FILE}
               className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 font-mono text-[10px] tracking-[0.15em] text-white/80 transition-colors hover:bg-white/10"
             >
-              DOWNLOAD ↓
+              <Download className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">DOWNLOAD</span>
             </a>
             <button
               onClick={onClose}
               aria-label="Close viewer"
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/70 transition-colors hover:border-red-500/50 hover:text-red-400"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-red-500/50 bg-red-500/15 text-red-400 transition-colors hover:bg-red-500 hover:text-white"
             >
-              ✕
+              <X className="h-4.5 w-4.5" strokeWidth={2.5} />
             </button>
           </div>
         </div>
@@ -500,18 +509,21 @@ function PdfViewer({
               disabled={page <= 1}
               className="inline-flex items-center gap-1 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 font-mono text-[10px] tracking-[0.15em] text-white/80 transition-colors hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-30"
             >
-              ← PREV
+              <ChevronLeft className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">PREV</span>
             </button>
             <button
               onClick={() => go(page + 1)}
               disabled={page >= TOTAL_PAGES}
               className="inline-flex items-center gap-1 rounded-full border border-red-500/40 bg-red-500/10 px-3 py-1.5 font-mono text-[10px] tracking-[0.15em] text-red-300 transition-colors hover:bg-red-500/20 disabled:cursor-not-allowed disabled:opacity-30"
             >
-              NEXT →
+              <span className="hidden sm:inline">NEXT</span>
+              <ChevronRight className="h-3.5 w-3.5" />
             </button>
           </div>
         </div>
       </motion.div>
-    </motion.div>
+    </motion.div>,
+    document.body,
   );
 }

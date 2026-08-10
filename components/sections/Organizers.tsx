@@ -7,14 +7,13 @@ import { SquigglyText } from "@/components/ui/squiggly-text";
 import { Phone } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-// Featured lead organizer, shown above the two faculty coordinators.
-// TODO: replace the placeholder name / phone / photo with the real details.
+// Featured lead organizer (Head of Department), shown above the coordinators.
 const leadOrganizer = {
-  roleTag: "CONVENER · HACKMATRIX 1.0",
-  name: "To Be Announced",
-  designation: "Head, Department of AI & Data Science · VIIT",
+  roleTag: "CONVENER · HEAD OF DEPARTMENT",
+  name: "Dr. T. V. Madhusudhana Rao",
+  designation: "Professor & Head, Department of AI & Data Science · VIIT",
   phone: "", // add the phone (10 digits) to show a clickable dialer button
-  image: "/hackmatrix-logo.svg",
+  image: "/organizers/hod.jpg",
 };
 
 // Clickable phone → opens the device dialer (tel:), always visible.
@@ -88,6 +87,16 @@ const studentCoordinators = [
   },
 ];
 
+// Affiliation / accreditation marks. The pill itself stays neutral for every
+// badge — identity is carried by a single solid indicator dot. Four tinted
+// pills read as candy; one shared shell with a coded dot reads as a system.
+const BADGES = [
+  { label: "Matrix Club", dot: "bg-violet-400" },
+  { label: "IEEE CIS Student Branch", dot: "bg-sky-400" },
+  { label: "NAAC A+", dot: "bg-emerald-400" },
+  { label: "NIRF 201-300", dot: "bg-amber-400" },
+];
+
 export default function Organizers() {
   return (
     <section id="organizers" className="relative py-24 px-4 bg-transparent overflow-hidden">
@@ -136,7 +145,7 @@ export default function Organizers() {
                       <img
                         src={leadOrganizer.image}
                         alt={leadOrganizer.name}
-                        className="h-24 w-24 shrink-0 rounded-2xl border border-red-500/40 object-cover p-1 shadow-xl shadow-red-600/20"
+                        className="h-24 w-24 shrink-0 rounded-2xl border border-red-500/40 object-cover object-top shadow-xl shadow-red-600/20"
                       />
                     </CardItem>
                     <CardItem translateZ="40" className="min-w-0">
@@ -271,18 +280,15 @@ export default function Organizers() {
               </p>
 
               <div className="flex flex-wrap justify-center gap-2 pt-2">
-                <span className="rounded-full border border-red-500/30 bg-red-500/10 px-3 py-1 text-[10px] font-mono font-semibold uppercase tracking-[0.12em] text-red-300">
-                  Matrix Club
-                </span>
-                <span className="rounded-full border border-blue-500/30 bg-blue-500/10 px-3 py-1 text-[10px] font-mono font-semibold uppercase tracking-[0.12em] text-blue-300">
-                  IEEE CIS Student Branch
-                </span>
-                <span className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-[10px] font-mono font-semibold uppercase tracking-[0.12em] text-emerald-300">
-                  NAAC A+
-                </span>
-                <span className="rounded-full border border-yellow-500/30 bg-yellow-500/10 px-3 py-1 text-[10px] font-mono font-semibold uppercase tracking-[0.12em] text-yellow-300">
-                  NIRF 201-300
-                </span>
+                {BADGES.map((b) => (
+                  <span
+                    key={b.label}
+                    className="inline-flex items-center gap-2 rounded-full border border-white/[0.14] bg-white/[0.04] px-3 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-white/75"
+                  >
+                    <span className={cn("h-1.5 w-1.5 shrink-0 rounded-full", b.dot)} />
+                    {b.label}
+                  </span>
+                ))}
               </div>
             </div>
           </MacbookScroll>
