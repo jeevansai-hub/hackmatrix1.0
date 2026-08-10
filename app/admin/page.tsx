@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
   signOut,
   setPersistence,
   browserLocalPersistence,
@@ -21,6 +22,8 @@ import {
   FileText,
   Users,
   Database,
+  UserPlus,
+  LogIn,
 } from "lucide-react";
 import { getFirebaseAuth } from "@/lib/firebase";
 import { cn } from "@/lib/utils";
@@ -28,26 +31,33 @@ import { cn } from "@/lib/utils";
 const REGISTER_URL =
   "https://docs.google.com/forms/d/e/1FAIpQLSd5HanrWsfYyQty8iWnHXvGu7NeqM2EEjd4x8nwqq0TJcpCGw/viewform";
 
+const AUTHORIZED_ADMIN_EMAIL = "hackmatrixaids@gmail.com";
+
 /** Turn Firebase's error codes into something a human can act on. */
-function authMessage(code: string): string {
+function authMessage(code: string, isSignUp: boolean): string {
   switch (code) {
+    case "auth/email-already-in-use":
+      return "An account with hackmatrixaids@gmail.com already exists. Please switch to Sign In mode.";
+    case "auth/weak-password":
+      return "Password should be at least 6 characters long.";
     case "auth/invalid-credential":
     case "auth/wrong-password":
+      return "Incorrect password for hackmatrixaids@gmail.com.";
     case "auth/user-not-found":
-      return "Incorrect email or password.";
+      return "No admin account found. Switch to 'Create Account' mode below to register hackmatrixaids@gmail.com.";
     case "auth/invalid-email":
-      return "That email address isn't valid.";
+      return "Invalid email address.";
     case "auth/user-disabled":
-      return "This account has been disabled.";
+      return "This admin account has been disabled in Firebase.";
     case "auth/too-many-requests":
-      return "Too many failed attempts. Wait a few minutes and try again.";
+      return "Too many failed attempts. Please wait a few minutes and try again.";
     case "auth/network-request-failed":
-      return "Network error. Check your connection and try again.";
+      return "Network error. Check your internet connection and try again.";
     case "auth/operation-not-allowed":
     case "auth/configuration-not-found":
-      return "Email/Password sign-in is not enabled for this Firebase project yet.";
+      return "Email/Password sign-in is not enabled in Firebase Console. Enable it under Auth → Sign-in method.";
     default:
-      return "Sign-in failed. Please try again.";
+      return isSignUp ? "Account creation failed. Please try again." : "Sign-in failed. Check your password and try again.";
   }
 }
 
@@ -55,47 +65,71 @@ export default function AdminPage() {
   const [user, setUser] = useState<User | null>(null);
   const [checking, setChecking] = useState(true);
 
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(AUTHORIZED_ADMIN_EMAIL);
   const [password, setPassword] = useState("");
   const [showPw, setShowPw] = useState(false);
+  const [isSignUpMode, setIsSignUpMode] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
-  // Restore an existing session on load.
+  // Restore an existing session on load & enforce admin email restriction.
   useEffect(() => {
     const unsub = onAuthStateChanged(getFirebaseAuth(), (u) => {
-      setUser(u);
+      if (u && u.email?.toLowerCase() !== AUTHORIZED_ADMIN_EMAIL.toLowerCase()) {
+        signOut(getFirebaseAuth());
+        setUser(null);
+        setError(`Access denied. Only ${AUTHORIZED_ADMIN_EMAIL} is authorized to access the admin console.`);
+      } else {
+        setUser(u);
+      }
       setChecking(false);
     });
     return unsub;
   }, []);
 
-  const handleLogin = useCallback(
+  const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
       setError(null);
+      setSuccessMsg(null);
+
+      const trimmedEmail = email.trim().toLowerCase();
+      if (trimmedEmail !== AUTHORIZED_ADMIN_EMAIL.toLowerCase()) {
+        setError(`Access Denied: Only ${AUTHORIZED_ADMIN_EMAIL} is authorized for admin access.`);
+        return;
+      }
+
       setBusy(true);
       try {
         const auth = getFirebaseAuth();
         await setPersistence(auth, browserLocalPersistence);
-        await signInWithEmailAndPassword(auth, email.trim(), password);
+
+        if (isSignUpMode) {
+          await createUserWithEmailAndPassword(auth, trimmedEmail, password);
+          setSuccessMsg(`Admin account (${AUTHORIZED_ADMIN_EMAIL}) created and signed in successfully!`);
+        } else {
+          await signInWithEmailAndPassword(auth, trimmedEmail, password);
+        }
       } catch (err) {
         const code =
           typeof err === "object" && err && "code" in err
             ? String((err as { code: unknown }).code)
             : "";
-        setError(authMessage(code));
+        setError(authMessage(code, isSignUpMode));
       } finally {
         setBusy(false);
       }
     },
-    [email, password],
+    [email, password, isSignUpMode],
   );
 
   const handleLogout = useCallback(async () => {
     await signOut(getFirebaseAuth());
-    setEmail("");
+    setEmail(AUTHORIZED_ADMIN_EMAIL);
     setPassword("");
+    setError(null);
+    setSuccessMsg(null);
   }, []);
 
   /* ─────────────── verifying an existing session ─────────────── */
@@ -158,25 +192,63 @@ export default function AdminPage() {
               </div>
             </div>
 
-            <div className="my-6 h-px w-full bg-white/10" />
+            <div className="my-5 h-px w-full bg-white/10" />
+
+            {/* Mode switch tabs */}
+            <div className="mb-5 grid grid-cols-2 gap-1 rounded-lg border border-white/10 bg-black/40 p-1 font-mono text-[10px]">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsSignUpMode(false);
+                  setError(null);
+                }}
+                className={cn(
+                  "flex items-center justify-center gap-1.5 rounded-md py-1.5 font-bold transition-all",
+                  !isSignUpMode
+                    ? "bg-red-600 text-white shadow-sm"
+                    : "text-white/40 hover:text-white",
+                )}
+              >
+                <LogIn className="h-3 w-3" />
+                Sign In
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsSignUpMode(true);
+                  setError(null);
+                }}
+                className={cn(
+                  "flex items-center justify-center gap-1.5 rounded-md py-1.5 font-bold transition-all",
+                  isSignUpMode
+                    ? "bg-red-600 text-white shadow-sm"
+                    : "text-white/40 hover:text-white",
+                )}
+              >
+                <UserPlus className="h-3 w-3" />
+                Create Account
+              </button>
+            </div>
 
             <div className="flex items-center gap-2">
               <ShieldCheck className="h-4 w-4 text-red-400" strokeWidth={2} />
-              <p className="font-mono text-[10px] tracking-[0.25em] text-red-400">
-                RESTRICTED ACCESS
+              <p className="font-mono text-[10px] tracking-[0.2em] text-red-400">
+                RESTRICTED: {AUTHORIZED_ADMIN_EMAIL}
               </p>
             </div>
-            <p className="mt-2 text-[13px] leading-relaxed text-white/45">
-              Authorised personnel only. Sign in with your organiser account.
+            <p className="mt-1.5 text-[12px] leading-relaxed text-white/45">
+              {isSignUpMode
+                ? "Register a new admin password for hackmatrixaids@gmail.com."
+                : "Enter your admin password to access the control panel."}
             </p>
 
-            <form onSubmit={handleLogin} className="mt-6 space-y-3">
+            <form onSubmit={handleSubmit} className="mt-5 space-y-3">
               <div>
                 <label
                   htmlFor="admin-email"
                   className="mb-1.5 block font-mono text-[10px] tracking-[0.2em] text-white/40"
                 >
-                  EMAIL
+                  ADMIN EMAIL
                 </label>
                 <input
                   id="admin-email"
@@ -185,7 +257,7 @@ export default function AdminPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@gmail.com"
+                  placeholder={AUTHORIZED_ADMIN_EMAIL}
                   className="w-full rounded-lg border border-white/12 bg-black/50 px-3 py-2.5 text-sm text-white placeholder:text-white/25 outline-none transition-colors focus:border-red-500/60"
                 />
               </div>
@@ -201,11 +273,12 @@ export default function AdminPage() {
                   <input
                     id="admin-password"
                     type={showPw ? "text" : "password"}
-                    autoComplete="current-password"
+                    autoComplete={isSignUpMode ? "new-password" : "current-password"}
                     required
+                    minLength={6}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="••••••"
+                    placeholder="••••••••"
                     className="w-full rounded-lg border border-white/12 bg-black/50 px-3 py-2.5 pr-10 text-sm text-white placeholder:text-white/25 outline-none transition-colors focus:border-red-500/60"
                   />
                   <button
@@ -237,20 +310,40 @@ export default function AdminPage() {
                     </p>
                   </motion.div>
                 )}
+
+                {successMsg && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    className="flex items-start gap-2 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-2"
+                  >
+                    <ShieldCheck className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-400" />
+                    <p className="text-[12px] leading-snug text-emerald-200">
+                      {successMsg}
+                    </p>
+                  </motion.div>
+                )}
               </AnimatePresence>
 
               <button
                 type="submit"
                 disabled={busy}
                 className={cn(
-                  "mt-1 flex w-full items-center justify-center gap-2 rounded-lg bg-red-600 px-4 py-2.5 text-sm font-bold text-white shadow-lg shadow-red-900/40 transition-all",
+                  "mt-2 flex w-full items-center justify-center gap-2 rounded-lg bg-red-600 px-4 py-2.5 text-sm font-bold text-white shadow-lg shadow-red-900/40 transition-all",
                   busy
                     ? "cursor-not-allowed opacity-60"
                     : "hover:bg-red-500 hover:shadow-red-600/50",
                 )}
               >
                 {busy && <Loader2 className="h-4 w-4 animate-spin" />}
-                {busy ? "Verifying…" : "Sign In"}
+                {busy
+                  ? isSignUpMode
+                    ? "Creating Account…"
+                    : "Verifying…"
+                  : isSignUpMode
+                  ? "Create Admin Account"
+                  : "Sign In"}
               </button>
             </form>
           </div>
