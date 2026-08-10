@@ -4,7 +4,7 @@ import { motion } from "motion/react";
 
 const REGISTER_URL =
   "https://docs.google.com/forms/d/e/1FAIpQLSd5HanrWsfYyQty8iWnHXvGu7NeqM2EEjd4x8nwqq0TJcpCGw/viewform";
-const EMAIL = "hackermatrix@gmail.com";
+const EMAIL = "hackmatrix-aids@vignaniit.edu.in";
 
 const QUICK_LINKS = [
   { label: "Home", href: "#home" },

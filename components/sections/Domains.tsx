@@ -319,7 +319,7 @@ export default function Domains() {
         <div className="mt-24 md:mt-32">
           <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-end sm:justify-between">
             <h3 className="text-2xl font-black tracking-tight text-white sm:text-3xl">
-              TECHNOLOGY IS THE MEDIUM.
+              CHOOSE YOUR STACK.
             </h3>
             <p className="text-sm text-zinc-500">
               Use the tools that best fit your solution.

@@ -222,16 +222,25 @@ export default function Navbar() {
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: -8, scale: 0.96 }}
                       transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                      className="fixed inset-x-3 top-[4.75rem] z-50 origin-top overflow-hidden rounded-2xl border border-white/10 bg-black/90 shadow-[0_24px_60px_-20px_rgba(220,38,38,0.5)] backdrop-blur-2xl sm:absolute sm:inset-x-auto sm:right-0 sm:top-[calc(100%+0.7rem)] sm:w-80 sm:origin-top-right"
+                      className="fixed right-3 top-[4.75rem] z-50 w-[15rem] max-w-[calc(100vw-1.5rem)] origin-top-right overflow-hidden rounded-2xl border border-white/10 bg-black/90 shadow-[0_24px_60px_-20px_rgba(220,38,38,0.5)] backdrop-blur-2xl sm:absolute sm:right-0 sm:top-[calc(100%+0.7rem)] sm:w-80"
                     >
-                      <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
-                        <span className="flex items-center gap-2 text-sm font-bold text-white">
-                          <Bell className="h-4 w-4 text-red-400" />
-                          Announcements
+                      <div className="flex items-center justify-between gap-2 border-b border-white/10 px-4 py-3">
+                        <span className="flex min-w-0 items-center gap-2 text-sm font-bold text-white">
+                          <Bell className="h-4 w-4 shrink-0 text-red-400" />
+                          <span className="truncate">Announcements</span>
                         </span>
-                        <span className="rounded-full bg-red-500/15 px-2 py-0.5 font-mono text-[10px] font-semibold tracking-wider text-red-400">
-                          {ANNOUNCEMENTS.length} NEW
-                        </span>
+                        <div className="flex shrink-0 items-center gap-2">
+                          <span className="rounded-full bg-red-500/15 px-2 py-0.5 font-mono text-[10px] font-semibold tracking-wider text-red-400">
+                            {ANNOUNCEMENTS.length} NEW
+                          </span>
+                          <button
+                            onClick={() => setNotifOpen(false)}
+                            aria-label="Close announcements"
+                            className="flex h-6 w-6 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/60 transition-colors hover:border-red-500/40 hover:bg-red-500/15 hover:text-red-400"
+                          >
+                            <X className="h-3.5 w-3.5" strokeWidth={2.5} />
+                          </button>
+                        </div>
                       </div>
                       <ul className="max-h-[60vh] overflow-y-auto p-1.5">
                         {ANNOUNCEMENTS.map((a) => {
@@ -246,9 +255,9 @@ export default function Navbar() {
                                 className="group flex gap-3 rounded-xl px-3 py-2.5 transition-colors hover:bg-white/5"
                               >
                                 <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-red-500 shadow-[0_0_8px_rgba(220,38,38,0.9)]" />
-                                <span className="flex min-w-0 flex-col">
+                                <span className="flex min-w-0 flex-1 flex-col">
                                   <span className="flex items-center gap-2">
-                                    <span className="truncate text-[13px] font-semibold text-white">
+                                    <span className="min-w-0 flex-1 truncate text-[13px] font-semibold text-white">
                                       {a.title}
                                     </span>
                                     <span className="shrink-0 rounded bg-white/10 px-1.5 py-0.5 font-mono text-[9px] font-semibold tracking-wider text-white/50">
