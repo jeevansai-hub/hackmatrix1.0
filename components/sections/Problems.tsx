@@ -505,13 +505,14 @@ function PdfViewer({
             ))}
           </div>
 
-          {/* page preview */}
-          <div className="relative min-w-0 flex-1 bg-neutral-900">
-            <iframe
+          {/* page preview — rendered page images (work inline on mobile, unlike an embedded PDF) */}
+          <div className="relative min-w-0 flex-1 overflow-y-auto bg-neutral-900 p-3 sm:p-4">
+            <img
               key={page}
-              title={`Problem statements page ${page}`}
-              src={`${PDF_URL}#page=${page}&toolbar=0&navpanes=0&view=FitH`}
-              className="h-full w-full"
+              src={`/problem-statements/ps-${String(page).padStart(2, "0")}.jpg`}
+              alt={`Problem statements page ${page}`}
+              loading="eager"
+              className="mx-auto block w-full max-w-3xl rounded-md shadow-2xl"
             />
           </div>
         </div>
