@@ -8,8 +8,12 @@ import {
   useSpring,
   useTransform,
 } from "motion/react";
-import { X, Download, ChevronLeft, ChevronRight } from "lucide-react";
+import { X, Download, ChevronLeft, ChevronRight, Lock, ShieldAlert } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  getInitialProblemStatus,
+  subscribeProblemStatus,
+} from "@/lib/problem-status";
 
 /* ────────────────────────────────────────────────────────────
    FRAME 5 — PROBLEM STATEMENTS
@@ -46,11 +50,21 @@ const PROBLEMS: PS[] = [
 export default function Problems() {
   const [viewerOpen, setViewerOpen] = useState(false);
   const [startPage, setStartPage] = useState(1);
+  const [isLaunched, setIsLaunched] = useState(true);
+
+  useEffect(() => {
+    setIsLaunched(getInitialProblemStatus());
+    const unsub = subscribeProblemStatus((launched) => {
+      setIsLaunched(launched);
+    });
+    return unsub;
+  }, []);
 
   const openViewer = useCallback((page = 1) => {
+    if (!isLaunched) return;
     setStartPage(page);
     setViewerOpen(true);
-  }, []);
+  }, [isLaunched]);
 
   return (
     <section
@@ -117,79 +131,101 @@ export default function Problems() {
           statements and choose the challenge your team wants to take on.
         </motion.p>
 
-        {/* ═══ MAIN: document + content ═══ */}
-        <div className="mt-14 grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_1.1fr] lg:gap-16">
-          {/* left: tilted document */}
-          <div className="flex justify-center lg:justify-start">
-            <DocumentCard onOpen={() => openViewer(1)} />
-          </div>
+        {/* ═══ MAIN: document + content (LAUNCHED OR REVOKED) ═══ */}
+        {isLaunched ? (
+          <div className="mt-14 grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_1.1fr] lg:gap-16">
+            {/* left: tilted document */}
+            <div className="flex justify-center lg:justify-start">
+              <DocumentCard onOpen={() => openViewer(1)} />
+            </div>
 
-          {/* right: content */}
-          <div>
-            <p className="font-mono text-[11px] tracking-[0.3em] text-red-500">
-              OFFICIAL CHALLENGE DOCUMENT
-            </p>
-            <h3 className="mt-4 text-2xl font-black leading-tight tracking-tight text-white sm:text-3xl">
-              8 PROBLEMS.
-              <br />
-              <span className="text-white/40">COUNTLESS APPROACHES.</span>
-            </h3>
-            <p className="mt-4 max-w-md text-sm leading-relaxed text-zinc-400">
-              The official HackMatrix 1.0 problem statement document contains
-              eight real-world challenges designed around campus operations,
-              student services, academic systems, and institutional efficiency.
-            </p>
+            {/* right: content */}
+            <div>
+              <p className="font-mono text-[11px] tracking-[0.3em] text-red-500">
+                OFFICIAL CHALLENGE DOCUMENT
+              </p>
+              <h3 className="mt-4 text-2xl font-black leading-tight tracking-tight text-white sm:text-3xl">
+                8 PROBLEMS.
+                <br />
+                <span className="text-white/40">COUNTLESS APPROACHES.</span>
+              </h3>
+              <p className="mt-4 max-w-md text-sm leading-relaxed text-zinc-400">
+                The official HackMatrix 1.0 problem statement document contains
+                eight real-world challenges designed around campus operations,
+                student services, academic systems, and institutional efficiency.
+              </p>
 
-            {/* challenge index */}
-            <div className="mt-7 grid gap-x-6 gap-y-1 sm:grid-cols-2">
-              {PROBLEMS.map((p) => (
+              {/* challenge index */}
+              <div className="mt-7 grid gap-x-6 gap-y-1 sm:grid-cols-2">
+                {PROBLEMS.map((p) => (
+                  <button
+                    key={p.id}
+                    onClick={() => openViewer(p.page)}
+                    className="group flex items-start gap-3 rounded-lg px-2 py-2 text-left transition-colors hover:bg-white/[0.03]"
+                  >
+                    <span className="mt-0.5 font-mono text-[11px] text-red-500/80">
+                      {p.n}
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block truncate text-[12px] font-bold tracking-tight text-white/85 group-hover:text-white">
+                        {p.title}
+                      </span>
+                      <span className="block truncate text-[10px] text-white/40">
+                        {p.sub}
+                      </span>
+                    </span>
+                  </button>
+                ))}
+              </div>
+
+              {/* primary actions */}
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
                 <button
-                  key={p.id}
-                  onClick={() => openViewer(p.page)}
-                  className="group flex items-start gap-3 rounded-lg px-2 py-2 text-left transition-colors hover:bg-white/[0.03]"
+                  onClick={() => openViewer(1)}
+                  className="group inline-flex items-center justify-center gap-2 rounded-full bg-red-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-red-900/40 transition-all hover:bg-red-500 hover:shadow-red-600/50 cursor-pointer"
                 >
-                  <span className="mt-0.5 font-mono text-[11px] text-red-500/80">
-                    {p.n}
-                  </span>
-                  <span className="min-w-0">
-                    <span className="block truncate text-[12px] font-bold tracking-tight text-white/85 group-hover:text-white">
-                      {p.title}
-                    </span>
-                    <span className="block truncate text-[10px] text-white/40">
-                      {p.sub}
-                    </span>
+                  PREVIEW PROBLEM STATEMENTS
+                  <span className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+                    ↗
                   </span>
                 </button>
-              ))}
+                <a
+                  href={PDF_URL}
+                  download={PDF_FILE}
+                  className="group inline-flex items-center justify-center gap-2 rounded-full border border-white/20 bg-white/5 px-6 py-3 text-sm font-medium text-white backdrop-blur-sm transition-all hover:border-white/35 hover:bg-white/10"
+                >
+                  DOWNLOAD PDF
+                  <span className="transition-transform group-hover:translate-y-0.5">
+                    ↓
+                  </span>
+                </a>
+              </div>
+              <p className="mt-3 font-mono text-[10px] tracking-[0.25em] text-white/35">
+                OFFICIAL DOCUMENT · 16 PAGES · PDF
+              </p>
             </div>
-
-            {/* primary actions */}
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <button
-                onClick={() => openViewer(1)}
-                className="group inline-flex items-center justify-center gap-2 rounded-full bg-red-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-red-900/40 transition-all hover:bg-red-500 hover:shadow-red-600/50"
-              >
-                PREVIEW PROBLEM STATEMENTS
-                <span className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
-                  ↗
-                </span>
-              </button>
-              <a
-                href={PDF_URL}
-                download={PDF_FILE}
-                className="group inline-flex items-center justify-center gap-2 rounded-full border border-white/20 bg-white/5 px-6 py-3 text-sm font-medium text-white backdrop-blur-sm transition-all hover:border-white/35 hover:bg-white/10"
-              >
-                DOWNLOAD PDF
-                <span className="transition-transform group-hover:translate-y-0.5">
-                  ↓
-                </span>
-              </a>
-            </div>
-            <p className="mt-3 font-mono text-[10px] tracking-[0.25em] text-white/35">
-              OFFICIAL DOCUMENT · 16 PAGES · PDF
-            </p>
           </div>
-        </div>
+        ) : (
+          /* REVOKED / LOCKED STATE CARD */
+          <div className="mt-14 flex flex-col items-center justify-center rounded-2xl border border-red-500/30 bg-gradient-to-b from-red-500/10 via-black/90 to-black p-8 text-center sm:p-12">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full border border-red-500/40 bg-red-500/20 text-red-400 shadow-lg shadow-red-900/40">
+              <Lock className="h-8 w-8" />
+            </div>
+            <p className="mt-6 font-mono text-xs tracking-[0.3em] text-red-400 font-bold">
+              PROBLEM STATEMENTS LOCKED / REVOKED
+            </p>
+            <h3 className="mt-3 text-2xl font-black tracking-tight text-white sm:text-3xl">
+              CHALLENGE RELEASE PENDING
+            </h3>
+            <p className="mt-3 max-w-lg text-sm leading-relaxed text-zinc-400">
+              The official HackMatrix 1.0 problem statements are currently locked or under review by the organisers. Check back soon for the official release!
+            </p>
+            <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 font-mono text-xs text-white/50">
+              <ShieldAlert className="h-4 w-4 text-red-400" />
+              STATUS: AWAITING ORGANISER RELEASE
+            </div>
+          </div>
+        )}
 
         {/* ═══ CLOSING ═══ */}
         <div className="mt-24 border-t border-white/10 pt-14 md:mt-32">
