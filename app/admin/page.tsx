@@ -377,8 +377,7 @@ export default function AdminPage() {
 }
 
 function ProblemStatusControlCard() {
-  const [psLaunched, setPsLaunched] = useState(true);
-  const [updating, setUpdating] = useState(false);
+  const [psLaunched, setPsLaunched] = useState(false);
 
   useEffect(() => {
     setPsLaunched(getInitialProblemStatus());
@@ -388,20 +387,22 @@ function ProblemStatusControlCard() {
     return unsub;
   }, []);
 
-  const handleToggle = async (targetState: boolean) => {
-    setUpdating(true);
-    await updateProblemStatus(targetState);
+  const handleToggle = (targetState: boolean) => {
+    // 1. Instant UI update
     setPsLaunched(targetState);
-    setUpdating(false);
 
+    // 2. Trigger celebration confetti if launched
     if (targetState) {
       triggerCelebrationConfetti();
     }
+
+    // 3. Persist to storage & Firestore in background
+    updateProblemStatus(targetState);
   };
 
   return (
     <div className="mt-8 rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.06] via-white/[0.02] to-transparent p-6 backdrop-blur-sm sm:p-7">
-      <div className="flex items-center justify-between border-b border-white/10 pb-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-4">
         <div className="flex items-center gap-2">
           <FileText className="h-5 w-5 text-red-400" />
           <p className="font-mono text-xs font-bold tracking-[0.25em] text-red-400">
@@ -435,20 +436,18 @@ function ProblemStatusControlCard() {
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           {!psLaunched ? (
             <button
               onClick={() => handleToggle(true)}
-              disabled={updating}
-              className="flex items-center gap-2 rounded-full bg-emerald-600 px-6 py-3 text-xs font-bold text-white shadow-lg shadow-emerald-900/50 transition-all hover:bg-emerald-500 hover:shadow-emerald-600/50 disabled:opacity-50 cursor-pointer"
+              className="flex items-center gap-2 rounded-full bg-emerald-600 px-6 py-3 text-xs font-bold text-white shadow-lg shadow-emerald-900/50 transition-all hover:bg-emerald-500 hover:shadow-emerald-600/50 active:scale-95 cursor-pointer"
             >
               🚀 LAUNCH PROBLEM STATEMENTS
             </button>
           ) : (
             <button
               onClick={() => handleToggle(false)}
-              disabled={updating}
-              className="flex items-center gap-2 rounded-full border border-red-500/50 bg-red-500/15 px-6 py-3 text-xs font-bold text-red-300 transition-all hover:bg-red-500 hover:text-white disabled:opacity-50 cursor-pointer"
+              className="flex items-center gap-2 rounded-full border border-red-500/50 bg-red-500/15 px-6 py-3 text-xs font-bold text-red-300 transition-all hover:bg-red-500 hover:text-white active:scale-95 cursor-pointer"
             >
               🔒 REVOKE / HIDE PROBLEM STATEMENTS
             </button>
