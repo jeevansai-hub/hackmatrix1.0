@@ -12,7 +12,7 @@ export function getInitialProblemStatus(): boolean {
   if (cached !== null) {
     return cached === "true";
   }
-  return false; // Default to false (revoked) until launched by admin, or true if previously set
+  return true; // Default to launched (visible to all); admin can still revoke via toggle
 }
 
 /** Subscribe to real-time status changes from Firestore, localStorage, and custom events */
