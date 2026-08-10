@@ -47,13 +47,13 @@ const facultyCoordinators = [
   {
     name: "Dr. P. Visweswara Rao",
     role: "Associate Professor, AI&DS · IEEE Senior Member · Advisor, IEEE CIS Student Branch",
-    phone: "7794977707",
+    phone: "",
     image: "/organizers/pvr.jpg",
   },
   {
     name: "Dr. J. Peter Praveen",
     role: "Associate Professor · Deputy HoD, AI&DS",
-    phone: "9949865863",
+    phone: "",
     image: "/organizers/praveen.png",
   },
 ];
@@ -87,15 +87,6 @@ const studentCoordinators = [
   },
 ];
 
-// Affiliation / accreditation marks. The pill itself stays neutral for every
-// badge — identity is carried by a single solid indicator dot. Four tinted
-// pills read as candy; one shared shell with a coded dot reads as a system.
-const BADGES = [
-  { label: "Matrix Club", dot: "bg-violet-400" },
-  { label: "IEEE CIS Student Branch", dot: "bg-sky-400" },
-  { label: "NAAC A+", dot: "bg-emerald-400" },
-  { label: "NIRF 201-300", dot: "bg-amber-400" },
-];
 
 export default function Organizers() {
   return (
@@ -204,15 +195,17 @@ export default function Organizers() {
                       </p>
                     </CardItem>
 
-                    <CardItem
-                      translateZ="40"
-                      className="mt-5 flex w-full items-center justify-between border-t border-white/10 pt-4"
-                    >
-                      <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/35">
-                        Direct Contact
-                      </span>
-                      <ContactButton phone={f.phone} />
-                    </CardItem>
+                    {f.phone && (
+                      <CardItem
+                        translateZ="40"
+                        className="mt-5 flex w-full items-center justify-between border-t border-white/10 pt-4"
+                      >
+                        <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/35">
+                          Direct Contact
+                        </span>
+                        <ContactButton phone={f.phone} />
+                      </CardItem>
+                    )}
                   </CardBody>
                 </CardContainer>
               </motion.div>
@@ -268,33 +261,31 @@ export default function Organizers() {
               </span>
             }
           >
-            <div className="flex flex-col items-center justify-center h-full text-center px-4 py-2 space-y-3.5">
+            <div className="flex h-full flex-col items-center justify-center gap-1.5 overflow-hidden px-2 py-2 text-center">
               <img
                 src="/viit-logo.png"
                 alt="Vignan's Institute of Information Technology"
-                className="h-auto w-[300px] max-w-full object-contain"
+                className="h-auto w-[130px] max-w-full shrink-0 object-contain"
               />
-              <span className="text-[10px] font-mono font-semibold tracking-[0.3em] text-red-400 uppercase bg-red-500/10 px-3.5 py-1 rounded-full border border-red-500/30">
-                Department of AI &amp; Data Science
-              </span>
-              <h4 className="text-lg sm:text-2xl font-black tracking-tight leading-[1.05] bg-gradient-to-b from-white to-white/65 bg-clip-text text-transparent">
-                Vignan&apos;s Institute of Information Technology
+              <h4 className="shrink-0 text-sm font-black leading-tight tracking-tight bg-gradient-to-b from-white to-white/65 bg-clip-text text-transparent">
+                Department of AI &amp; DS
               </h4>
-              <p className="text-[11px] font-mono tracking-[0.15em] text-white/45">
+              <p className="shrink-0 text-[8px] font-mono tracking-[0.12em] text-white/45">
                 Autonomous · Visakhapatnam · Affiliated to JNTU-GV
               </p>
 
-              <div className="flex flex-wrap justify-center gap-2 pt-2">
-                {BADGES.map((b) => (
-                  <span
-                    key={b.label}
-                    className="inline-flex items-center gap-2 rounded-full border border-white/[0.14] bg-white/[0.04] px-3 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-white/75"
-                  >
-                    <span className={cn("h-1.5 w-1.5 shrink-0 rounded-full", b.dot)} />
-                    {b.label}
-                  </span>
-                ))}
-              </div>
+              {/* Accreditation strip (NAAC · NIRF · UGC · IIC) — wide, fills the screen */}
+              <img
+                src="/accreditations.png"
+                alt="NAAC A+ (CGPA 3.4/4) · NIRF 2025 India 201-300 · UGC Autonomous · IIC (Ministry of Education Initiative)"
+                className="mx-auto h-auto w-[340px] max-w-[90%] max-h-[132px] shrink-0 object-contain"
+              />
+              {/* Student branches & club strip (IEEE SB · CIS SBC · Matrix Club) */}
+              <img
+                src="/clubs.png"
+                alt="Vignan's Visakhapatnam IEEE Student Branch · IEEE Computational Intelligence Society Student Branch Chapter (CIS SBC) · Matrix Club AI&DS VIIT"
+                className="mx-auto h-auto w-[330px] max-w-[88%] max-h-[106px] shrink-0 object-contain"
+              />
             </div>
           </MacbookScroll>
         </div>

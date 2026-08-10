@@ -6,6 +6,7 @@ import Hero from "@/components/sections/Hero";
 import Experience from "@/components/sections/Experience";
 import Domains from "@/components/sections/Domains";
 import Prizes from "@/components/sections/Prizes";
+import Certificates from "@/components/sections/Certificates";
 import Schedule from "@/components/sections/Schedule";
 import Problems from "@/components/sections/Problems";
 import FAQ from "@/components/sections/FAQ";
@@ -51,6 +52,7 @@ export default function Home() {
                   <Experience />
                   <Domains />
                   <Prizes />
+                  <Certificates />
                   <Schedule />
                   <Problems />
                   <FAQ />
