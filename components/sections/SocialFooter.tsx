@@ -113,7 +113,7 @@ export default function SocialFooter() {
               Organized by the Department of Artificial Intelligence &amp; Data
               Science,{" "}
               <span className="text-white/80">
-                Vignan&apos;s Institute of Information Technology
+                Vignan&apos;s Institute of Information Technology (A)
               </span>
               , Visakhapatnam.
             </p>
