@@ -1,11 +1,12 @@
 "use client";
-import React, { useState, useEffect, useCallback, useSyncExternalStore } from "react";
+import React, { useState, useEffect, useCallback, useRef, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import { CardContainer, CardBody, CardItem } from "@/components/ui/3d-card";
 import {
   motion,
   AnimatePresence,
   useMotionValue,
+  useScroll,
   useSpring,
   useTransform,
 } from "motion/react";
@@ -167,8 +168,8 @@ export default function Certificates() {
           </motion.p>
         </div>
 
-        {/* ── Progression ladder ── */}
-        <div className="mt-16 grid gap-5 lg:grid-cols-3 lg:gap-6">
+        {/* ── Progression ladder — 3D scroll-reveal ── */}
+        <LadderReveal>
           {STAGES.map((s, i) => (
             <motion.div
               key={s.step}
@@ -257,7 +258,7 @@ export default function Certificates() {
               </CardContainer>
             </motion.div>
           ))}
-        </div>
+        </LadderReveal>
 
         {/* Flow line under the ladder (desktop) */}
         <div className="mt-6 hidden items-center justify-center gap-3 lg:flex">
@@ -323,6 +324,52 @@ export default function Certificates() {
         )}
       </AnimatePresence>
     </section>
+  );
+}
+
+/* ══════════════════════ 3D SCROLL-REVEAL LADDER ══════════════════════ */
+
+// Wraps the three recognition cards and stands them up from a tilted plane
+// as they scroll into view — the scroll-linked 3D reveal, applied in place.
+// Fully responsive: on mobile the cards stack and still reveal cleanly.
+function LadderReveal({ children }: { children: React.ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "center 60%"],
+  });
+  // Spring-smooth the scroll so the reveal glides instead of tracking 1:1.
+  const p = useSpring(scrollYProgress, {
+    stiffness: 90,
+    damping: 24,
+    mass: 0.6,
+    restDelta: 0.001,
+  });
+  const rotateX = useTransform(p, [0, 1], [42, 0]);
+  const scale = useTransform(p, [0, 1], [0.9, 1]);
+  const y = useTransform(p, [0, 1], [70, 0]);
+  const opacity = useTransform(p, [0, 0.45], [0, 1]);
+  const blur = useTransform(p, [0, 0.5], [8, 0]);
+  const filter = useTransform(blur, (b) => `blur(${b}px)`);
+
+  return (
+    <div ref={ref} className="mt-16 [perspective:1500px]">
+      <motion.div
+        style={{
+          rotateX,
+          scale,
+          y,
+          opacity,
+          filter,
+          transformOrigin: "50% 0%",
+          transformStyle: "preserve-3d",
+          willChange: "transform, opacity, filter",
+        }}
+        className="grid gap-5 lg:grid-cols-3 lg:gap-6"
+      >
+        {children}
+      </motion.div>
+    </div>
   );
 }
 
