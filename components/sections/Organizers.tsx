@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 const leadOrganizer = {
   roleTag: "CONVENER · HEAD OF DEPARTMENT",
   name: "Dr. T. V. Madhusudhana Rao",
-  designation: "Professor & Head, Department of AI & Data Science · VIIT",
+  designation: "Professor & Head, Department of AI & DS · VIIT",
   phone: "", // add the phone (10 digits) to show a clickable dialer button
   image: "/organizers/hod.jpg",
 };
