@@ -136,6 +136,8 @@ export default function Organizers() {
                       <img
                         src={leadOrganizer.image}
                         alt={leadOrganizer.name}
+                        loading="lazy"
+                        decoding="async"
                         className="h-24 w-24 shrink-0 rounded-2xl border border-red-500/40 object-cover object-top shadow-xl shadow-red-600/20"
                       />
                     </CardItem>
@@ -178,6 +180,8 @@ export default function Organizers() {
                       <img
                         src={f.image}
                         alt={f.name}
+                        loading="lazy"
+                        decoding="async"
                         className="h-20 w-20 shrink-0 rounded-2xl border border-red-500/30 object-cover shadow-lg transition-transform duration-300 group-hover/card:scale-105"
                       />
                       <div className="min-w-0">
@@ -234,6 +238,8 @@ export default function Organizers() {
                         <img
                           src={s.avatar}
                           alt={s.name}
+                          loading="lazy"
+                          decoding="async"
                           className={`h-full w-full ${s.avatar.endsWith(".svg") ? "object-contain" : "object-cover"}`}
                         />
                       </div>
@@ -268,18 +274,24 @@ export default function Organizers() {
               <img
                 src="/vignan-header.png"
                 alt="Vignan's Institute of Information Technology (Autonomous), Duvvada, Visakhapatnam"
+                loading="lazy"
+                decoding="async"
                 className="h-auto w-[195px] max-w-[50%] shrink-0 object-contain"
               />
               {/* Accreditation row — NAAC · NIRF · UGC · IIC (CIS SBC) */}
               <img
                 src="/row1-accreditations.png"
                 alt="NAAC A+ (CGPA 3.4/4) · NIRF 2025 India Ranking 201-300 · UGC Autonomous · Institution's Innovation Council (CIS SBC)"
+                loading="lazy"
+                decoding="async"
                 className="h-auto w-[270px] max-w-[66%] shrink-0 object-contain"
               />
               {/* Student branches & club row — IEEE SB · CIS SBC · Matrix Club */}
               <img
                 src="/row2-clubs.png"
                 alt="Vignan's Visakhapatnam IEEE Student Branch · IEEE Computational Intelligence Society Student Branch Chapter (CIS SBC) · Matrix Club AI&DS VIIT"
+                loading="lazy"
+                decoding="async"
                 className="h-auto w-[260px] max-w-[64%] shrink-0 object-contain"
               />
             </div>

@@ -50,6 +50,8 @@ export default function SocialFooter() {
                 <img
                   src="/hackmatrix-mark.png"
                   alt="HackMatrix"
+                  loading="lazy"
+                  decoding="async"
                   className="h-full w-full object-contain"
                 />
               </span>

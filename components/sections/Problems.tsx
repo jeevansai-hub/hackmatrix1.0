@@ -574,6 +574,7 @@ function PdfViewer({
                     src={`/problem-statements/ps-${String(p).padStart(2, "0")}.jpg`}
                     alt={`Problem statements page ${p}`}
                     loading={p <= 2 ? "eager" : "lazy"}
+                    decoding="async"
                     className="absolute inset-0 h-full w-full object-contain"
                   />
                 </div>

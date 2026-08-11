@@ -134,6 +134,7 @@ export default function Navbar() {
               <img
                 src="/hackmatrix-mark.png"
                 alt="HackMatrix"
+                decoding="async"
                 className="h-full w-full object-contain"
               />
               <span className="absolute inset-0 rounded-full bg-red-600/25 blur-md transition-opacity duration-300 group-hover:opacity-100 opacity-0" />
