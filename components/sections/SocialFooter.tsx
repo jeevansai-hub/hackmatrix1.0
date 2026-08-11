@@ -152,28 +152,11 @@ export default function SocialFooter() {
         </div>
 
         {/* ── Bottom bar ── */}
-        <div className="mt-14 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-6 text-center sm:flex-row sm:text-left">
+        <div className="mt-14 flex flex-col items-center justify-center gap-4 border-t border-white/10 pt-6 text-center">
           <p className="font-mono text-[11px] tracking-wide text-white/40">
             © 2026 <span className="text-white/60">HACKMATRIX</span>. All rights
             reserved.
           </p>
-          <div className="group relative inline-flex max-w-full flex-nowrap items-center gap-1.5 whitespace-nowrap rounded-full border border-white/10 bg-gradient-to-r from-white/[0.03] via-white/[0.05] to-white/[0.03] px-3 py-1.5 backdrop-blur-md transition-all duration-300 hover:border-red-500/40 hover:bg-black/60 hover:shadow-lg hover:shadow-red-500/15 sm:gap-2.5 sm:px-4 sm:py-2">
-            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-red-500/30 bg-red-500/10 font-mono text-[10px] font-bold text-red-400 shadow-sm shadow-red-500/20">
-              &lt;/&gt;
-            </span>
-            <span className="shrink-0 font-mono text-[8px] uppercase tracking-[0.14em] text-white/45 sm:text-[10px] sm:tracking-[0.2em]">
-              Developed by
-            </span>
-            <span className="shrink-0 whitespace-nowrap font-mono text-[11px] font-bold sm:text-xs">
-              <span className="bg-gradient-to-r from-white via-red-100 to-red-400 bg-clip-text font-extrabold tracking-wide text-transparent drop-shadow-sm">
-                M. Jeevan Sai
-              </span>
-              <span className="mx-1 text-[10px] font-semibold text-red-500/60">&amp;</span>
-              <span className="bg-gradient-to-r from-white via-red-100 to-red-400 bg-clip-text font-extrabold tracking-wide text-transparent drop-shadow-sm">
-                L. Prasanth
-              </span>
-            </span>
-          </div>
         </div>
       </div>
 
