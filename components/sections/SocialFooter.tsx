@@ -183,8 +183,8 @@ export default function SocialFooter() {
         className="pointer-events-none select-none overflow-hidden px-4 pb-4 text-center"
       >
         <span
-          className="block max-w-full font-black leading-none tracking-tighter text-white/[0.035]"
-          style={{ fontSize: "clamp(2.25rem, 13vw, 13rem)" }}
+          className="block max-w-full bg-gradient-to-b from-white/[0.12] to-white/[0.05] bg-clip-text font-black leading-none tracking-tighter text-transparent"
+          style={{ fontSize: "clamp(2.75rem, 14vw, 13rem)" }}
         >
           HACKMATRIX
         </span>
