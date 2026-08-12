@@ -1,0 +1,109 @@
+/* ═══════════════════════════════════════════════════════════
+   HackMatrix — Typography System
+   Import AFTER globals.css (needs the fonts + --font-flap var).
+   These classes package the recurring type patterns used across
+   the site so you don't have to re-derive the clamps / tracking.
+   ═══════════════════════════════════════════════════════════ */
+
+/* ─── Font families ───
+   Display / body : General Sans   (var --font-general, fallback stack)
+   Mono / labels  : JetBrains Mono (var --font-flap) */
+.font-display { font-family: 'General Sans', system-ui, -apple-system, sans-serif; }
+.font-mono-flap { font-family: var(--font-flap), 'JetBrains Mono', ui-monospace, monospace; }
+
+/* ─────────────────────────────────────────────
+   1. HERO TITLE — the giant statement headline.
+   Fluid, font-black, tight tracking, red glow.
+   e.g. HACK·MATRIX
+   ───────────────────────────────────────────── */
+.type-hero {
+  font-family: 'General Sans', system-ui, sans-serif;
+  font-weight: 900;
+  font-size: clamp(2.6rem, min(14vw, 12.5vh), 8.5rem);
+  line-height: 0.86;
+  letter-spacing: -0.035em;
+  color: #fff;
+  text-shadow: 0 0 80px rgba(220, 38, 38, 0.45);
+}
+
+/* ─────────────────────────────────────────────
+   2. SECTION EYEBROW — small mono kicker above a
+   heading. Wide-tracked, muted red, uppercase.
+   ───────────────────────────────────────────── */
+.type-eyebrow {
+  font-family: var(--font-flap), 'JetBrains Mono', monospace;
+  font-size: 0.75rem;            /* text-xs */
+  text-transform: uppercase;
+  letter-spacing: 0.4em;         /* tracking-[0.4em] */
+  color: rgba(220, 38, 38, 0.6); /* red-500/60 */
+}
+
+/* ─────────────────────────────────────────────
+   3. SECTION HEADING — big black display heading.
+   ───────────────────────────────────────────── */
+.type-heading {
+  font-family: 'General Sans', system-ui, sans-serif;
+  font-weight: 900;
+  font-size: clamp(2.25rem, 6vw, 3.75rem); /* text-4xl → sm:text-6xl */
+  line-height: 1.05;
+  letter-spacing: -0.02em;                 /* tracking-tight */
+  color: #fff;
+}
+
+/* ─────────────────────────────────────────────
+   4. SUB-HEADING / CARD TITLE — bold, tight.
+   ───────────────────────────────────────────── */
+.type-card-title {
+  font-family: 'General Sans', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.125rem, 2.5vw, 1.25rem); /* text-lg → text-xl */
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+
+/* ─────────────────────────────────────────────
+   5. MONO MICRO-LABEL — the metadata / status text
+   (badges, "ONLINE", spec keys, timestamps).
+   ───────────────────────────────────────────── */
+.type-label {
+  font-family: var(--font-flap), 'JetBrains Mono', monospace;
+  font-size: 0.625rem;      /* text-[10px] */
+  text-transform: uppercase;
+  letter-spacing: 0.2em;    /* tracking-[0.2em] */
+  color: rgba(255, 255, 255, 0.45);
+}
+.type-label--accent { color: #f87171; }              /* red-400 */
+.type-label--bright { color: rgba(255, 255, 255, 0.7); }
+
+/* ─────────────────────────────────────────────
+   6. POSITIONING LINE — the tagline / caps subhead
+   under the hero title.
+   ───────────────────────────────────────────── */
+.type-tagline {
+  font-family: var(--font-flap), 'JetBrains Mono', monospace;
+  font-size: clamp(0.55rem, 1.7vw, 0.85rem);
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  color: #f87171;
+  text-shadow: 0 0 22px rgba(220, 38, 38, 0.45);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   TYPE SCALE REFERENCE (as used across the site)
+
+   Role            Weight  Size                       Tracking
+   ─────────────────────────────────────────────────────────────
+   Hero title      900     clamp(2.6rem → 8.5rem)     -0.035em
+   Section heading 900     text-4xl → 6xl             tight (-0.02em)
+   Card title      700     text-lg → xl               tight
+   Eyebrow (mono)  400     text-xs                    0.4em
+   Tagline (mono)  400     clamp(.55 → .85rem)        0.3em
+   Micro-label     400/700 text-[8px]–[11px]          0.14em–0.3em
+   Body / facts    400     clamp(.52 → .78rem)        0.14em
+
+   Letter-spacing ladder (mono uppercase):
+     0.14em  dense rows / fact lists
+     0.16em–0.2em  labels, badges
+     0.25em–0.3em  taglines, section kickers
+     0.4em   top-level eyebrows
+   ═══════════════════════════════════════════════════════════ */
