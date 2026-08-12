@@ -7,6 +7,7 @@ import {
   Layers,
   Trophy,
   Clock,
+  ClipboardList,
   HelpCircle,
   FileText,
   Menu,
@@ -23,6 +24,7 @@ const NAV_LINKS = [
   { title: "Problems", href: "#problems", id: "problems", icon: FileText },
   { title: "Prizes", href: "#prizes", id: "prizes", icon: Trophy },
   { title: "Timeline", href: "#timeline", id: "timeline", icon: Clock },
+  { title: "Rules", href: "#essentials", id: "essentials", icon: ClipboardList },
   { title: "FAQ", href: "#faq", id: "faq", icon: HelpCircle },
 ];
 
@@ -31,6 +33,24 @@ const REGISTER_URL =
 
 // Announcements shown in the header bell. Edit freely — order is newest-first.
 const ANNOUNCEMENTS = [
+  {
+    title: "Report by 8:45 AM sharp",
+    desc: "Reach the venue for slot allocation. Carry your ID card — mandatory.",
+    tag: "REPORTING",
+    href: "#essentials",
+  },
+  {
+    title: "Lab allotments are out",
+    desc: "AI&DS labs: Mark, Dennis, Tim, Edgar, Larry & AB-05.",
+    tag: "VENUE",
+    href: "#essentials",
+  },
+  {
+    title: "Dress code: Non-Uniform",
+    desc: "Come as you build — full rules & instructions inside.",
+    tag: "RULES",
+    href: "#essentials",
+  },
   {
     title: "Registrations are open",
     desc: "Lock in your team's spot for HackMatrix 1.0.",
@@ -42,12 +62,6 @@ const ANNOUNCEMENTS = [
     desc: "Cash prizes, trophies & swag across every track.",
     tag: "PRIZES",
     href: "#prizes",
-  },
-  {
-    title: "Problem statements released",
-    desc: "Explore the challenge tracks before you build.",
-    tag: "TRACKS",
-    href: "#tracks",
   },
 ];
 

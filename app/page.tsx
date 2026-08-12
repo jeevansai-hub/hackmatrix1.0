@@ -8,6 +8,7 @@ import Domains from "@/components/sections/Domains";
 import Prizes from "@/components/sections/Prizes";
 import Certificates from "@/components/sections/Certificates";
 import Schedule from "@/components/sections/Schedule";
+import Essentials from "@/components/sections/Essentials";
 import Problems from "@/components/sections/Problems";
 import FAQ from "@/components/sections/FAQ";
 import Organizers from "@/components/sections/Organizers";
@@ -54,6 +55,7 @@ export default function Home() {
                   <Prizes />
                   <Certificates />
                   <Schedule />
+                  <Essentials />
                   <Problems />
                   <FAQ />
                   <Organizers />

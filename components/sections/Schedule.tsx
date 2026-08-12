@@ -34,149 +34,103 @@ interface Day {
 }
 
 const DAY_01: Day = {
-  tag: "DAY 01",
-  date: "13 AUGUST 2026",
-  window: "09:00 — 15:30",
-  heading: "IDEA TO PROTOTYPE",
-  desc: "The first day is dedicated to understanding the challenge, developing the approach, building the solution, and receiving feedback throughout the development process.",
+  tag: "DAY 1",
+  date: "",
+  window: "8:45 AM – 4:00 PM",
+  heading: "BUILD · EVALUATE · QUALIFY",
+  desc: "Venue: Aryabhatta Centre for Computing (Labs — Mark, Dennis, Tim, Edgar, Larry & AB-05). Day 1 runs from the problem-statement workout through building, judging, and the Top 10 qualification announcement.",
   slots: [
     {
+      id: "d1-0",
+      time: "8:45 AM",
+      title: "REPORTING & SLOT ALLOCATION",
+      label: "ARRIVE · VERIFY · SETTLE",
+      body: "Report at the venue sharp at 8:45 AM for slot allocation. Carry your ID card and be punctual to avoid delays.",
+    },
+    {
       id: "d1-1",
-      time: "09:00 — 09:30",
-      title: "ONBOARDING & TEAM CHECK-IN",
-      label: "CHECK-IN · ORIENTATION · SETUP",
-      body: "Arrive, complete team verification, collect event materials, and get familiar with the hackathon environment.",
+      time: "9:00 AM – 10:30 AM",
+      title: "PROBLEM STATEMENT & PROBLEM-SOLVING WORKOUT",
+      label: "ANALYZE · IDEATE · PLAN",
+      body: "The event opens with the problem statements and a problem-solving workout. Understand the challenge, shape your approach, and plan your build with your team.",
+      flow: ["PROBLEM", "IDEA", "APPROACH", "PLAN"],
     },
     {
       id: "d1-2",
-      time: "09:30 — 10:00",
-      title: "OPENING SESSION",
-      label: "WELCOME · BRIEFING · KICKOFF",
-      body: "Welcome to HackMatrix 1.0. An introduction to the hackathon, the participating teams, the challenge environment, and what to expect across the two-day experience.",
-    },
-    {
-      id: "d1-3",
-      time: "10:00 — 10:30",
-      title: "CHALLENGE BRIEFING",
-      label: "UNDERSTAND · DISCUSS · PLAN",
-      body: "Understand the challenge, clarify the requirements, and align your team before development begins.",
-    },
-    {
-      id: "d1-4",
-      time: "10:30 — 12:30",
-      title: "DEVELOPMENT SESSION I",
-      label: "PLAN · DESIGN · DEVELOP",
-      body: "The build begins. Teams define their approach, design the solution, set up the initial implementation, and begin developing their prototype.",
-      flow: ["IDEA", "APPROACH", "ARCHITECTURE", "FIRST BUILD"],
-    },
-    {
-      id: "d1-5",
-      time: "12:30 — 13:30",
-      title: "LUNCH & NETWORKING",
-      label: "PAUSE · CONNECT · RESET",
-      body: "Take a break, connect with other participants, exchange ideas, and recharge before the next development session.",
+      time: "10:30 AM – 11:00 AM",
+      title: "SNACKS BREAK",
+      label: "PAUSE · REFUEL · RESET",
+      body: "A short refreshment break before the building session begins.",
       kind: "break",
     },
     {
+      id: "d1-3",
+      time: "11:00 AM – 12:00 PM",
+      title: "PPT MAKING & APPLICATION BUILDING",
+      label: "DESIGN · BUILD · PREPARE",
+      body: "Build your prototype and prepare your presentation. Turn the planned approach into a working application and a pitch deck for evaluation.",
+      flow: ["ARCHITECTURE", "BUILD", "PPT", "PROTOTYPE"],
+    },
+    {
+      id: "d1-4",
+      time: "12:00 PM – 1:00 PM",
+      title: "LUNCH BREAK",
+      label: "PAUSE · CONNECT · RESET",
+      body: "Lunch break as per the official schedule. Be back at your allotted lab by 1:00 PM sharp — Day 1 judging begins immediately after.",
+      kind: "break",
+    },
+    {
+      id: "d1-5",
+      time: "1:00 PM – 2:45 PM",
+      title: "JUDGING & EVALUATION",
+      label: "DEMONSTRATE · REVIEW · SCORE",
+      body: "Teams present their prototype and pitch to the evaluation panel. Judging determines the ranking and which teams qualify for Day 2.",
+      flow: ["DEMO", "PITCH", "REVIEW", "SCORE"],
+      kind: "milestone",
+    },
+    {
       id: "d1-6",
-      time: "13:30 — 14:15",
-      title: "DEVELOPMENT SESSION II",
-      label: "BUILD · TEST · ITERATE",
-      body: "Continue developing the prototype and turn the initial approach into a more complete working solution.",
-    },
-    {
-      id: "d1-7",
-      time: "14:15 — 14:45",
-      title: "MENTORSHIP & REVIEW",
-      label: "REVIEW · FEEDBACK · IMPROVE",
-      body: "Get feedback from faculty and domain mentors. Discuss your technical direction, identify gaps, and improve the solution before evaluation.",
-    },
-    {
-      id: "d1-8",
-      time: "14:45 — 15:15",
-      title: "DAY 01 EVALUATION",
-      label: "DEMONSTRATE · REVIEW · SELECT",
-      body: "Teams present their progress and demonstrate their solution to the evaluation panel. Based on the evaluation, selected teams will advance to Day 02.",
+      time: "3:15 PM – 4:00 PM",
+      title: "RESULTS & TOP 10 QUALIFICATION",
+      label: "RANK · DECLARE · QUALIFY",
+      body: "Team-wise results and the ranking outcome are announced, followed by the Top 10 teams qualification and instructions for the qualified teams.",
+      flow: ["TEAM RESULTS", "RANKING", "TOP 10 QUALIFY", "INSTRUCTIONS"],
       kind: "milestone",
     },
   ],
 };
 
 const DAY_02: Day = {
-  tag: "DAY 02",
-  date: "14 AUGUST 2026",
-  window: "09:00 — 15:30",
-  heading: "REFINE TO FINAL",
-  desc: "Selected teams return with their Day 01 progress, complete their solutions, and present before lunch — after which the Vault opens for the final reveal, results, certificates, and award ceremony.",
+  tag: "DAY 2",
+  date: "",
+  window: "9:00 AM – 3:30 PM",
+  heading: "PITCH · CELEBRATE · WIN",
+  desc: "Venue: Seminar Hall – 1. The qualified Top 10 teams pitch their ideas for final evaluation in the morning, followed by the closing ceremony, prize distribution, and recognition.",
   slots: [
     {
       id: "d2-1",
-      time: "09:00 — 09:15",
-      title: "TEAM RE-ONBOARDING",
-      label: "RECONNECT · REVIEW · RESUME",
-      body: "Reconnect with your team, review your Day 01 progress, and prepare for the final development session.",
-    },
-    {
-      id: "d2-2",
-      time: "09:15 — 10:45",
-      title: "DEVELOPMENT SESSION III",
-      label: "RESUME · DEVELOP · STRENGTHEN",
-      body: "Continue from where Day 01 ended. Strengthen the implementation, complete key functionality, and address the gaps identified during the first evaluation.",
-    },
-    {
-      id: "d2-3",
-      time: "10:45 — 11:30",
-      title: "REFINEMENT & TESTING",
-      label: "TEST · FIX · REFINE",
-      body: "Test the solution, resolve technical issues, improve usability, and prepare the prototype for final presentation.",
-    },
-    {
-      id: "d2-4",
-      time: "11:30 — 12:30",
-      title: "FINAL PRESENTATIONS",
+      time: "9:00 AM – 12:30 PM",
+      title: "IDEA PITCHING & FINAL EVALUATION",
       label: "PRESENT · DEMO · EXPLAIN",
-      body: "Teams present their completed solutions to the evaluation panel and demonstrate the working prototype — the last milestone before lunch.",
+      body: "The qualified teams pitch their ideas and demonstrate their solutions to the panel for the final evaluation that decides the winners.",
       flow: ["PROBLEM", "SOLUTION", "TECHNOLOGY", "DEMO", "IMPACT"],
       kind: "milestone",
     },
     {
-      id: "d2-5",
-      time: "12:30 — 13:30",
-      title: "LUNCH & NETWORKING",
+      id: "d2-2",
+      time: "12:30 PM – 1:30 PM",
+      title: "LUNCH BREAK",
       label: "PAUSE · CONNECT · RESET",
-      body: "Break after the final presentations. Connect with fellow participants and mentors while the panel completes evaluation.",
+      body: "Break after the pitching session while the panel completes the final evaluation.",
       kind: "break",
     },
     {
-      id: "d2-6",
-      time: "13:30 — 14:15",
-      title: "THE VAULT — FINAL REVEAL",
-      label: "UNLOCK · REVEAL · ANNOUNCE",
-      body: "The Vault opens. The evaluation is sealed and the outcome is revealed as HackMatrix reaches its climactic moment.",
-      flow: ["EVALUATION SEALED", "VAULT UNLOCKS", "THE REVEAL"],
-      kind: "milestone",
-    },
-    {
-      id: "d2-7",
-      time: "14:15 — 14:45",
-      title: "FINAL RESULTS",
-      label: "RANK · RECOGNIZE · DECLARE",
-      body: "Winning teams are declared and recognized for their work across the two-day build.",
-      kind: "milestone",
-    },
-    {
-      id: "d2-8",
-      time: "14:45 — 15:05",
-      title: "PARTICIPATION CERTIFICATES",
-      label: "HONOR · APPRECIATE · AWARD",
-      body: "Certificates of participation are presented to every team in recognition of their effort and contribution.",
-    },
-    {
-      id: "d2-9",
-      time: "15:05 — 15:30",
-      title: "AWARD CEREMONY & CLOSING",
+      id: "d2-3",
+      time: "2:00 PM – 3:30 PM",
+      title: "CLOSING CEREMONY & PRIZE DISTRIBUTION",
       label: "CELEBRATE · AWARD · CLOSE",
-      body: "Prizes are awarded to the winning teams, followed by the closing session that brings HackMatrix 1.0 to a celebratory finish.",
+      body: "Welcome and opening remarks, address by the HOD, the Principal's speech, final results, prize money and certificate distribution, recognition of winning & finalist teams, vote of thanks, and the group photograph.",
+      flow: ["RESULTS", "PRIZES", "CERTIFICATES", "VOTE OF THANKS", "GROUP PHOTO"],
       kind: "milestone",
     },
   ],
@@ -303,10 +257,14 @@ function DayPanel({
             <span className="font-mono text-xs tracking-[0.3em] text-red-500">
               {day.tag}
             </span>
-            <span className="h-3 w-px bg-white/20" />
-            <span className="font-mono text-[11px] tracking-[0.2em] text-white/45">
-              {day.date}
-            </span>
+            {day.date && (
+              <>
+                <span className="h-3 w-px bg-white/20" />
+                <span className="font-mono text-[11px] tracking-[0.2em] text-white/45">
+                  {day.date}
+                </span>
+              </>
+            )}
           </div>
           <h3 className="mt-2 text-2xl font-black tracking-tight text-white sm:text-3xl">
             {day.heading}
@@ -324,7 +282,7 @@ function DayPanel({
 
       {/* slots */}
       <div className="px-2 py-4 sm:px-4">
-        {day.slots.map((slot, i) => (
+        {day.slots.map((slot) => (
           <SlotRow
             key={slot.id}
             slot={slot}
@@ -333,7 +291,6 @@ function DayPanel({
             onToggle={() =>
               setActive(active === slot.id ? null : slot.id)
             }
-            last={i === day.slots.length - 1}
           />
         ))}
       </div>
@@ -348,13 +305,11 @@ function SlotRow({
   open,
   onOpen,
   onToggle,
-  last,
 }: {
   slot: Slot;
   open: boolean;
   onOpen: () => void;
   onToggle: () => void;
-  last: boolean;
 }) {
   const isBreak = slot.kind === "break";
   const isMilestone = slot.kind === "milestone";
@@ -368,41 +323,16 @@ function SlotRow({
         open ? "bg-white/[0.04]" : "hover:bg-white/[0.02]",
       )}
     >
-      {/* time + rail */}
-      <div className="relative flex flex-col items-end pr-3 sm:pr-5">
+      {/* time (clean column — no rail / nodes) */}
+      <div className="flex flex-col items-end pr-3 sm:pr-4">
         <span
           className={cn(
             "font-mono text-[10px] tabular-nums tracking-tight transition-colors sm:text-xs",
-            open ? "text-white" : isBreak ? "text-white/25" : "text-white/45",
+            open ? "text-white" : isBreak ? "text-white/30" : "text-white/50",
           )}
         >
           {slot.time}
         </span>
-        {/* vertical rail on the right edge of the time column */}
-        <span
-          aria-hidden
-          className="absolute right-0 top-0 h-full w-px bg-white/10"
-        />
-        {!last && (
-          <span
-            aria-hidden
-            className="absolute right-0 top-6 h-[calc(100%-0px)] w-px bg-white/10"
-          />
-        )}
-        {/* node */}
-        <span
-          aria-hidden
-          className={cn(
-            "absolute right-[-4px] top-[5px] flex h-2.5 w-2.5 items-center justify-center rounded-full border transition-all",
-            isMilestone
-              ? "border-red-500 bg-red-500 shadow-[0_0_10px_rgba(220,38,38,0.9)]"
-              : open
-                ? "border-red-500 bg-red-500/80"
-                : isBreak
-                  ? "border-white/20 bg-transparent"
-                  : "border-white/30 bg-[#04050a]",
-          )}
-        />
       </div>
 
       {/* content */}
@@ -511,13 +441,13 @@ function Junction() {
           DAY 01 COMPLETE
         </span>
         <span className="text-sm font-bold tracking-tight text-white">
-          SELECTED TEAMS CONTINUE
+          TOP 10 TEAMS QUALIFY
         </span>
       </div>
 
       <p className="mt-3 max-w-xs text-center text-xs text-white/40">
-        Based on the Day 01 evaluation, selected teams advance to the second
-        day.
+        Based on the Day 01 judging, the Top 10 teams qualify and advance to the
+        final pitching round on Day 02.
       </p>
 
       <motion.span
