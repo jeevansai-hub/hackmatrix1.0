@@ -5,7 +5,7 @@ import {
   MapPin,
   Shirt,
   AlarmClock,
-  Cpu,
+  Presentation,
   Laptop,
   Wifi,
   BadgeCheck,
@@ -250,7 +250,7 @@ export default function Essentials() {
                 className="group flex items-center gap-3 rounded-xl border border-white/10 bg-black/30 px-4 py-3.5 transition-colors hover:border-red-500/30 hover:bg-red-500/[0.05]"
               >
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-white/50 transition-colors group-hover:border-red-500/40 group-hover:text-red-400">
-                  <Cpu className="h-4 w-4" strokeWidth={2} />
+                  <Presentation className="h-4 w-4" strokeWidth={2} />
                 </span>
                 <div className="min-w-0">
                   <p className="font-mono text-[10px] tracking-[0.25em] text-white/35">
