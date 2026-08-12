@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { motion } from "motion/react";
+import DeveloperCredit from "@/components/ui/developer-credit";
 
 const REGISTER_URL =
   "https://docs.google.com/forms/d/e/1FAIpQLSd5HanrWsfYyQty8iWnHXvGu7NeqM2EEjd4x8nwqq0TJcpCGw/viewform";
@@ -294,6 +295,9 @@ export default function SocialFooter() {
             © 2026 <span className="text-white/60">HACKMATRIX</span>. All rights
             reserved.
           </p>
+
+          {/* One-time vaporize credit — shows once, then disappears */}
+          <DeveloperCredit />
         </div>
       </div>
 
