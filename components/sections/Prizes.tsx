@@ -145,12 +145,10 @@ export default function Prizes() {
                 <CardItem
                   translateZ={30}
                   as="a"
-                  href="https://docs.google.com/forms/d/e/1FAIpQLSd5HanrWsfYyQty8iWnHXvGu7NeqM2EEjd4x8nwqq0TJcpCGw/viewform"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href="#home"
                   className="text-xs font-mono text-red-400 hover:text-red-300 transition-colors flex items-center gap-1"
                 >
-                  Register Now →
+                  Day 1 Results →
                 </CardItem>
                 <CardItem
                   translateZ={50}

@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { PixelGrid } from "@/components/ui/pixel-grid";
 import { SquigglyText } from "@/components/ui/squiggly-text";
 import { HeistVaultCountdown } from "@/components/ui/heist-vault-countdown";
+import ResultsReveal from "@/components/sections/ResultsReveal";
 
 /** Essential event facts — level 4 of the hierarchy. */
 const FACTS: { label: string; accent?: boolean }[] = [
@@ -172,35 +173,32 @@ export default function Hero() {
           ))}
         </motion.ul>
 
-        {/* 5 ── LIVE COUNTDOWN ───────────────────────── */}
-        <motion.div {...fade(0.5)}>
-          <HeistVaultCountdown targetDate="2026-08-13T09:00:00" compact />
+        {/* 5 ── FINAL RESULTS COUNTDOWN ──────────────── */}
+        <motion.div {...fade(0.5)} className="flex flex-col items-center gap-2">
+          <p
+            className="font-mono uppercase text-red-400"
+            style={{
+              fontSize: "clamp(0.5rem, 1.5vw, 0.68rem)",
+              letterSpacing: "0.28em",
+              textShadow: "0 0 22px rgba(220,38,38,0.45)",
+            }}
+          >
+            Final Results Announcement · 14 Aug · 2:00 PM
+          </p>
+          <HeistVaultCountdown targetDate="2026-08-14T14:00:00" compact />
         </motion.div>
 
-        {/* 6 ── PRIMARY ACTIONS ──────────────────────── */}
+        {/* 6 ── DAY 1 RESULTS CARD ───────────────────── */}
+        <motion.div {...fade(0.58)}>
+          <ResultsReveal />
+        </motion.div>
+
+        {/* 7 ── PRIMARY ACTION ───────────────────────── */}
         <motion.div
-          {...fade(0.6)}
+          {...fade(0.66)}
           className="flex w-full flex-col items-center gap-2.5 sm:w-auto sm:flex-row sm:gap-3"
           style={{ marginTop: "clamp(0.15rem, 0.8vh, 0.6rem)" }}
         >
-          <a
-            href="https://docs.google.com/forms/d/e/1FAIpQLSd5HanrWsfYyQty8iWnHXvGu7NeqM2EEjd4x8nwqq0TJcpCGw/viewform"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-full bg-red-600 px-7 font-bold uppercase text-white shadow-lg shadow-red-900/40 transition-all hover:bg-red-500 hover:shadow-red-600/50 sm:w-auto"
-            style={{
-              height: "clamp(2.6rem, 6vh, 3.25rem)",
-              fontSize: "clamp(0.65rem, 1.8vw, 0.85rem)",
-              letterSpacing: "0.14em",
-            }}
-          >
-            <span className="relative z-10">Register Your Team</span>
-            <span className="relative z-10 transition-transform group-hover:translate-x-1">
-              →
-            </span>
-            <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
-          </a>
-
           <a
             href="#about"
             className="group inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/20 bg-white/5 px-7 font-medium uppercase text-white backdrop-blur-sm transition-all hover:border-white/35 hover:bg-white/10 sm:w-auto"

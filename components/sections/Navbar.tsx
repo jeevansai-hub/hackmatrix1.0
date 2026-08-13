@@ -12,7 +12,6 @@ import {
   FileText,
   Menu,
   X,
-  ArrowUpRight,
   Bell,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -27,9 +26,6 @@ const NAV_LINKS = [
   { title: "Rules", href: "#essentials", id: "essentials", icon: ClipboardList },
   { title: "FAQ", href: "#faq", id: "faq", icon: HelpCircle },
 ];
-
-const REGISTER_URL =
-  "https://docs.google.com/forms/d/e/1FAIpQLSd5HanrWsfYyQty8iWnHXvGu7NeqM2EEjd4x8nwqq0TJcpCGw/viewform";
 
 // Announcements shown in the header bell. Edit freely — order is newest-first.
 const ANNOUNCEMENTS = [
@@ -52,10 +48,10 @@ const ANNOUNCEMENTS = [
     href: "#essentials",
   },
   {
-    title: "Registrations are open",
-    desc: "Lock in your team's spot for HackMatrix 1.0.",
+    title: "Day 1 results are out",
+    desc: "Preliminary round results announced — reveal them on the home page.",
     tag: "NEW",
-    href: REGISTER_URL,
+    href: "#home",
   },
   {
     title: "₹10,000+ prize pool live",
@@ -296,20 +292,6 @@ export default function Navbar() {
               </AnimatePresence>
             </div>
 
-            {/* Register — compact on mobile, full label from sm up.
-                Sits before the menu button in DOM + visual order. */}
-            <a
-              href={REGISTER_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group relative inline-flex items-center gap-1 overflow-hidden rounded-full bg-red-600 px-3 py-1.5 text-[11px] font-bold text-white shadow-lg shadow-red-900/40 transition-all duration-300 hover:bg-red-500 hover:shadow-red-600/50 sm:gap-1.5 sm:px-4 sm:py-2 sm:text-[13px]"
-            >
-              <span className="relative z-10">Register</span>
-              <ArrowUpRight className="relative z-10 h-3 w-3 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 sm:h-3.5 sm:w-3.5" />
-              {/* sheen */}
-              <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
-            </a>
-
             <button
               onClick={() => {
                 setOpen((v) => !v);
@@ -410,17 +392,6 @@ export default function Navbar() {
                   );
                 })}
               </ul>
-
-              <a
-                href={REGISTER_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => setOpen(false)}
-                className="mt-2 flex items-center justify-center gap-2 rounded-2xl bg-red-600 px-4 py-3.5 text-sm font-bold text-white shadow-lg shadow-red-900/40 transition-colors hover:bg-red-500"
-              >
-                Register Now
-                <ArrowUpRight className="h-4 w-4" />
-              </a>
           </motion.div>
         )}
       </AnimatePresence>

@@ -3,8 +3,6 @@ import React from "react";
 import { motion } from "motion/react";
 import DeveloperCredit from "@/components/ui/developer-credit";
 
-const REGISTER_URL =
-  "https://docs.google.com/forms/d/e/1FAIpQLSd5HanrWsfYyQty8iWnHXvGu7NeqM2EEjd4x8nwqq0TJcpCGw/viewform";
 const EMAIL = "hackmatrix-aids@vignaniit.edu.in";
 
 const QUICK_LINKS = [
@@ -178,12 +176,10 @@ export default function SocialFooter() {
             </p>
 
             <a
-              href={REGISTER_URL}
-              target="_blank"
-              rel="noopener noreferrer"
+              href="#home"
               className="group mt-6 inline-flex items-center gap-2 rounded-full bg-red-600 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-red-900/40 transition-all hover:bg-red-500 hover:shadow-red-600/50"
             >
-              Register Your Team
+              View Day 1 Results
               <span className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
                 ↗
               </span>
