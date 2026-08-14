@@ -24,10 +24,10 @@ const WINNERS: Winner[] = [
     label: "1st Place",
     team: "TEAM TOFFAN",
     members: [
-      "P. Tulasi Priya",
-      "P. Dinesh Sampath Ram",
-      "Ranga Sai Vaibhav",
-      "P. Charishma Praharshitha",
+      "P.Tulasi Priya",
+      "P.Dinesh Sampath Ram",
+      "R.Sai Vaibhav",
+      "P.Charishma",
     ],
   },
   {
@@ -37,7 +37,7 @@ const WINNERS: Winner[] = [
     members: [
       "Tanna Dusyanth",
       "Nikhil Runkana",
-      "P.V.S.D. Lohith",
+      "P.V.S.D.Lohith",
       "Pilla Premsatya",
     ],
   },
@@ -45,7 +45,7 @@ const WINNERS: Winner[] = [
     place: 3,
     label: "3rd Place",
     team: "EVORA",
-    members: ["S V Kishore Reddy", "K Ashritha", "K. Mounika"],
+    members: ["S.V.Kishore Reddy", "K.Ashritha", "K.Mounika"],
   },
 ];
 
