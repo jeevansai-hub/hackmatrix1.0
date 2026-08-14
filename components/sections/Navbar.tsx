@@ -48,8 +48,8 @@ const ANNOUNCEMENTS = [
     href: "#essentials",
   },
   {
-    title: "Day 1 results are out",
-    desc: "Preliminary round results announced — reveal them on the home page.",
+    title: "Winners announced 🏆",
+    desc: "Team Toffan takes 1st place — see the full podium on the home page.",
     tag: "NEW",
     href: "#home",
   },

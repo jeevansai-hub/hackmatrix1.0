@@ -179,7 +179,7 @@ export default function SocialFooter() {
               href="#home"
               className="group mt-6 inline-flex items-center gap-2 rounded-full bg-red-600 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-red-900/40 transition-all hover:bg-red-500 hover:shadow-red-600/50"
             >
-              View Day 1 Results
+              View Winners
               <span className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
                 ↗
               </span>

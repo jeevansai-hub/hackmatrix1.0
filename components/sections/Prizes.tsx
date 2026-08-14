@@ -148,7 +148,7 @@ export default function Prizes() {
                   href="#home"
                   className="text-xs font-mono text-red-400 hover:text-red-300 transition-colors flex items-center gap-1"
                 >
-                  Day 1 Results →
+                  Winners →
                 </CardItem>
                 <CardItem
                   translateZ={50}

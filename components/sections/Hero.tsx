@@ -3,8 +3,7 @@ import React from "react";
 import { motion } from "motion/react";
 import { PixelGrid } from "@/components/ui/pixel-grid";
 import { SquigglyText } from "@/components/ui/squiggly-text";
-import { HeistVaultCountdown } from "@/components/ui/heist-vault-countdown";
-import ResultsReveal from "@/components/sections/ResultsReveal";
+import WinnersPodium from "@/components/sections/WinnersPodium";
 
 /** Essential event facts — level 4 of the hierarchy. */
 const FACTS: { label: string; accent?: boolean }[] = [
@@ -173,24 +172,9 @@ export default function Hero() {
           ))}
         </motion.ul>
 
-        {/* 5 ── FINAL RESULTS COUNTDOWN ──────────────── */}
-        <motion.div {...fade(0.5)} className="flex flex-col items-center gap-2">
-          <p
-            className="font-mono uppercase text-red-400"
-            style={{
-              fontSize: "clamp(0.5rem, 1.5vw, 0.68rem)",
-              letterSpacing: "0.28em",
-              textShadow: "0 0 22px rgba(220,38,38,0.45)",
-            }}
-          >
-            Final Results Announcement · 14 Aug · 2:00 PM
-          </p>
-          <HeistVaultCountdown targetDate="2026-08-14T14:00:00" compact />
-        </motion.div>
-
-        {/* 6 ── DAY 1 RESULTS CARD ───────────────────── */}
-        <motion.div {...fade(0.58)}>
-          <ResultsReveal />
+        {/* 5 ── OFFICIAL WINNERS ─────────────────────── */}
+        <motion.div {...fade(0.5)} className="w-full">
+          <WinnersPodium />
         </motion.div>
 
         {/* 7 ── PRIMARY ACTION ───────────────────────── */}
