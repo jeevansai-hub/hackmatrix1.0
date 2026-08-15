@@ -44,3 +44,6 @@ next-env.d.ts
 .firebase/
 .claude/
 
+# generated at build time — see scripts/gen-version.js
+/public/version.json
+

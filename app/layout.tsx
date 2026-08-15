@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import FirebaseProvider from "@/components/providers/firebase-provider";
+import VersionWatcher from "@/components/providers/version-watcher";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -45,6 +46,7 @@ export default function RootLayout({
         <FirebaseProvider>
           {children}
         </FirebaseProvider>
+        <VersionWatcher />
       </body>
     </html>
   );
