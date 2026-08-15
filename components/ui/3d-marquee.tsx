@@ -61,9 +61,12 @@ const ThreeDMarquee = ({
   className,
 }: ThreeDMarqueeProps) => {
   const columnCount = 4;
-  const chunkSize = Math.ceil(images.length / columnCount);
+  // Round-robin (not sequential slicing) so every column gets a mix of
+  // old and newly-appended photos — columns 3 & 4 are hidden below
+  // lg/sm, so sequential chunking would silently drop new photos from
+  // mobile whenever the array grows.
   const chunks = Array.from({ length: columnCount }, (_, colIndex) =>
-    images.slice(colIndex * chunkSize, colIndex * chunkSize + chunkSize),
+    images.filter((_, i) => i % columnCount === colIndex),
   ).filter((c) => c.length > 0);
 
   return (
