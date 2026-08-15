@@ -4,6 +4,7 @@ import Preloader from "@/components/sections/Preloader";
 import Navbar from "@/components/sections/Navbar";
 import Hero from "@/components/sections/Hero";
 import Experience from "@/components/sections/Experience";
+import Gallery from "@/components/sections/Gallery";
 import Domains from "@/components/sections/Domains";
 import Prizes from "@/components/sections/Prizes";
 import Certificates from "@/components/sections/Certificates";
@@ -46,6 +47,9 @@ export default function Home() {
             <main className="relative">
               {/* Hero Section */}
               <Hero />
+
+              {/* Straight off the landing page: the event's photo wall */}
+              <Gallery />
 
               {/* Subsequent sections on the consistent black theme */}
               <div className="relative z-10">
