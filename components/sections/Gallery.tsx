@@ -74,8 +74,8 @@ export default function Gallery() {
           transition={{ delay: 0.15, duration: 0.6 }}
           className="mx-auto mb-12 max-w-xl text-center text-sm leading-relaxed text-zinc-400 sm:mx-0 sm:text-left sm:text-base"
         >
-          24 hours of code, chaos, and camaraderie. Frames from the floor at
-          HackMatrix 1.0.
+          Two days of building, learning, and pushing limits — captured live
+          from the HackMatrix 1.0 floor.
         </motion.p>
 
         <motion.div
