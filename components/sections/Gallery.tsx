@@ -23,6 +23,16 @@ const GALLERY_IMAGES = [
   "/gallery/DSC_3363.webp",
   "/gallery/DSC_3446.webp",
   "/gallery/DSC_3465.webp",
+  "/gallery/pt2-01.webp",
+  "/gallery/pt2-02.webp",
+  "/gallery/pt2-03.webp",
+  "/gallery/pt2-04.webp",
+  "/gallery/pt2-05.webp",
+  "/gallery/pt2-06.webp",
+  "/gallery/pt2-07.webp",
+  "/gallery/pt2-08.webp",
+  "/gallery/pt2-09.webp",
+  "/gallery/pt2-10.webp",
 ];
 
 export default function Gallery() {
